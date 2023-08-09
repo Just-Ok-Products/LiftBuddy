@@ -2,3 +2,29 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.flex {
+  display: flex;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.mat-mdc-snack-bar-container {
+  &.error-snackbar {
+    --mdc-snackbar-container-color: #e57373;
+    --mat-mdc-snack-bar-button-color: #000;
+    --mdc-snackbar-supporting-text-color: #000;
+  }
+  &.success-snackbar {
+    --mdc-snackbar-container-color: #81c784;
+    --mat-mdc-snack-bar-button-color: #000;
+    --mdc-snackbar-supporting-text-color: #000;
+  }
+  &.warn-snackbar {
+    --mdc-snackbar-container-color: #ffb74d;
+    --mat-mdc-snack-bar-button-color: #000;
+    --mdc-snackbar-supporting-text-color: #000;
+  }
+}

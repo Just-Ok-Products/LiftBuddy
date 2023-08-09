@@ -9,13 +9,15 @@
       "problemMatcher": {
         "owner": "typescript",
         "pattern": "$tsc",
+        "applyTo": "closedDocuments",
+        "fileLocation": ["relative", "${cwd}"],
         "background": {
           "activeOnStart": true,
           "beginsPattern": {
             "regexp": "(.*?)"
           },
           "endsPattern": {
-            "regexp": "bundle generation complete"
+            "regexp": "Compiled |Failed to compile"
           }
         }
       }

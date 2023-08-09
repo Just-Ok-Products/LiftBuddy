@@ -1,10 +1,22 @@
 using Lift.Buddy.API.Interfaces;
 using Lift.Buddy.API.Services;
+using Lift.Buddy.Core.DB;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSwaggerGen(setupAction =>
+{
+    setupAction.AddSecurityDefinition("", new Microsoft.OpenApi.Models.OpenApiSecurityScheme()
+    {
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        Description = "Input a valid token to access this API"
+    });
+});
 
 builder.WebHost.UseUrls("http://localhost:5200");
 
@@ -37,9 +49,25 @@ builder.Services.AddAuthentication("Bearer")
 
 builder.Services.AddScoped<ILoginService, LoginService>();
 
+builder.Services.AddDbContext<DBContext>(options =>
+{
+    options.UseSqlite(builder.Configuration.GetConnectionString("TestDatabase"));
+});
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
+
+//var context = app.Services.GetRequiredService<DbContext>();
+
+//context.Database.EnsureCreated();
+//context.Database.Migrate();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseCors(anyCors);
 

@@ -6,13 +6,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-//#region Components
-import { LoginPageComponent } from './Pages/login/Components/login-page/login-page.component';
-import { LoginContainerComponent } from './Pages/login/login-container.component';
-import { RegisterPageComponent } from './Pages/login/Components/register-page/register-page.component';
-import { ForgotPasswordPageComponent } from './Pages/login/Components/forgot-password-page/forgot-password-page.component';
-//#endregion
-
 //#region Material imports
 import { MatButtonModule } from '@angular/material/button'
 import { MatCardModule } from '@angular/material/card'
@@ -20,12 +13,23 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatIconModule } from '@angular/material/icon'
+import { MatGridListModule } from '@angular/material/grid-list'
+import { MatSelectModule } from '@angular/material/select'
 //#endregion
 
 //#region Services
-import { LoginService } from './Services/login.service';
-import { ApiCallsService } from './Services/Utils/api.calls.service';
+import { LoginService } from './Pages/login/Services/login.service';
+import { ApiCallsService } from './Services/Utils/api-calls.service';
+//#endregion
+
+//#region Components
+import { LoginPageComponent } from './Pages/login/Components/login-page/login-page.component';
+import { LoginContainerComponent } from './Pages/login/login-container.component';
+import { RegisterPageComponent } from './Pages/login/Components/register-page/register-page.component';
+import { ForgotPasswordPageComponent } from './Pages/login/Components/forgot-password-page/forgot-password-page.component';
 import { HomePageComponent } from './Pages/Home/home-page/home-page.component';
+import { UserInformationComponent } from './Pages/login/Components/register-page/Components/user-information/user-information.component';
+import { SecurityQuestionsComponent } from './Pages/login/Components/register-page/Components/security-questions/security-questions.component';
 //#endregion
 
 @NgModule({
@@ -35,7 +39,9 @@ import { HomePageComponent } from './Pages/Home/home-page/home-page.component';
     LoginContainerComponent,
     RegisterPageComponent,
     HomePageComponent,
-    ForgotPasswordPageComponent
+    ForgotPasswordPageComponent,
+    UserInformationComponent,
+    SecurityQuestionsComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +54,9 @@ import { HomePageComponent } from './Pages/Home/home-page/home-page.component';
     ReactiveFormsModule,
     FormsModule,
     MatSnackBarModule,
-    MatIconModule
+    MatIconModule,
+    MatGridListModule,
+    MatSelectModule
   ],
   providers: [LoginService, ApiCallsService],
   bootstrap: [AppComponent]

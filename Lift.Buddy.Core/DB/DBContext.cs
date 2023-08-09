@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Lift.Buddy.Core.DB.Models;
+﻿using Lift.Buddy.Core.DB.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace Lift.Buddy.Core.DB
 {
-    public class DBContext : DbContext
+    public partial class DBContext : DbContext
     {
         private readonly IConfiguration _configuration;
+
+        public DbSet<User> Users { get; set; }
 
         public DBContext(IConfiguration configuration)
         {
@@ -23,7 +19,31 @@ namespace Lift.Buddy.Core.DB
             optionsBuilder.UseSqlite(_configuration.GetConnectionString("TestDatabase"));
         }
 
-        public DbSet<User> Users { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasKey(e => e.UserName);
 
+                entity.Property(e => e.Email).IsRequired();
+
+                entity.Property(e => e.Name);
+
+                entity.Property(e => e.Password).IsRequired();
+
+                entity.Property(e => e.Surname);
+
+                entity.Property(e => e.IsAdmin).IsRequired()
+                    .HasDefaultValue(false);
+
+                entity.Property(e => e.IsAdmin).IsRequired();
+
+                entity.Property(e => e.IsAdmin).IsRequired();
+            });
+
+            OnModelCreatingPartial(modelBuilder);
+        }
+
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

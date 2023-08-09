@@ -23,13 +23,19 @@ namespace Lift.Buddy.API.Controllers
             _loginService = loginService;
         }
 
+        [HttpGet("security-questions")]
+        public IActionResult GetSecurityQuestions()
+        {
+
+        }
+
         [HttpPost]
         public IActionResult Login([FromBody] LoginCredentials loginCredentials) {
             if (loginCredentials == null || !_loginService.CheckCredentials(loginCredentials))
             {
                 return Unauthorized();
             }
-            var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["Authentication:SecretForKey"]));
+            var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["Authentication:SecretForKey"] ?? ""));
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claimsForToken = new List<Claim>();
@@ -55,13 +61,26 @@ namespace Lift.Buddy.API.Controllers
             return Ok(loginResp);
         }
 
-        [Authorize]
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegistrationCredentials registrationCredentials) {
+            var response = await _loginService.RegisterUser(registrationCredentials);
+            if (!response.result)
+            {
+                return Ok(response);
+            }
+            return NoContent();
+        }
+
         [HttpPost("changePassword")]
-        public IActionResult ChangePassword([FromBody] LoginCredentials loginCredentials)
+        public async Task<IActionResult> ChangePassword([FromBody] LoginCredentials loginCredentials)
         {
-            var username = loginCredentials.Username;
-            var newPassowrd = loginCredentials.Password;
-            return Ok();
+            var response = await _loginService.ChangePassword(loginCredentials);
+
+            if (!response.result)
+            {
+                return Ok(response);
+            }
+            return NoContent();
         }
     }
 }

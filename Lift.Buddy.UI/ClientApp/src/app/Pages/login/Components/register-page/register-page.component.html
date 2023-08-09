@@ -1,3 +1,11 @@
-<p>
-  register-page works!
-</p>
+<div>
+  <app-user-information
+    *ngIf="registrationStep == 0"
+    (onConfirm)="getUserData()"
+  ></app-user-information>
+  <app-security-questions
+    *ngIf="registrationStep == 1"
+    (onBack)="back()"
+    (onRegister)="register()"
+  ></app-security-questions>
+</div>

@@ -1,13 +1,13 @@
 import { FormGroup, FormControl } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { LoginService } from 'src/app/Services/login.service';
+import { LoginService } from 'src/app/Pages/login/Services/login.service';
 import { LoginCredetials } from 'src/app/Model/LoginCredentials';
-import { SnackBarService } from 'src/app/Services/Utils/snack.bar.service';
+import { SnackBarService } from 'src/app/Services/Utils/snack-bar.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login-page.component.html',
-  styleUrls: ['./login-page.component.css', '../../../../app.component.scss']
+  styleUrls: ['./login-page.component.css']
 })
 export class LoginPageComponent implements OnInit {
 
@@ -39,10 +39,10 @@ export class LoginPageComponent implements OnInit {
     var response = await this.loginService.login(loginCredentials);
 
     if (!response.result) {
-      this.snackBarService.openSnackbar("Login failed")
+      this.snackBarService.operErrorSnackbar("Login failed")
       this.forgotPasswordVisible = true;
     } else {
-      this.snackBarService.openSnackbar("Login successfull")
+      this.snackBarService.openSuccessSnackbar("Login successfull")
       console.log(response.body)
     }
   }

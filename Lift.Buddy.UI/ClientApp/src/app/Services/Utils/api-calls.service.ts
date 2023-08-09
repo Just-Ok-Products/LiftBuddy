@@ -7,6 +7,7 @@ import { Response } from '../../Model/Response'
 export class ApiCallsService {
 
   public jwtToken: string | null = "";
+  public defaultUrl: string = "http://localhost:5200/";
 
   public async apiGet(url: string) {
     let response = new Response();
@@ -39,9 +40,9 @@ export class ApiCallsService {
   }
 
   public async apiPost(url: string, body: object) {
-    let response = new Response();
+    let apiResponse = new Response();
     try {
-      const response = await fetch(url,
+      const response = await fetch(this.defaultUrl + url,
         {
           method: 'POST',
           body: JSON.stringify(body),
@@ -53,20 +54,22 @@ export class ApiCallsService {
       if (!response.ok) {
         throw new Error(`Error on post call: ${response.status}`);
       }
-      const result = (await response.json()) as Response;
-      return result;
+      if (response.bodyUsed) {
+        const result = (await response.json()) as Response;
+        return result;
+      }
+      apiResponse.result = true;
     } catch (error) {
 
-      response.result = false;
+      apiResponse.result = false;
       if (error instanceof Error) {
         console.error(`Error ${error.message}`)
-        response.notes = error.message;
-        return response;
+        apiResponse.notes = error.message;
       } else {
         console.error(`Unexpected error: `, error)
-        response.notes = 'Unexpected error';
-        return response;
+        apiResponse.notes = 'Unexpected error';
       }
     }
+    return apiResponse;
   }
 }

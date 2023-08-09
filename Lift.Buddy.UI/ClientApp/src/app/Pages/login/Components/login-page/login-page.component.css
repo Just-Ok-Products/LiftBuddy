@@ -14,10 +14,6 @@ img {
   margin-right: 10%;
 }
 
-mat-form-field {
-  width: 100%;
-}
-
 mat-hint {
   color: red;
   cursor: pointer;
