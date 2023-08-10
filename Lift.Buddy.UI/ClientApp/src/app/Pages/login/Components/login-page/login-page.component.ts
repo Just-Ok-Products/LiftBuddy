@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoginService } from 'src/app/Pages/login/Services/login.service';
 import { LoginCredetials } from 'src/app/Model/LoginCredentials';
 import { SnackBarService } from 'src/app/Services/Utils/snack-bar.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,8 @@ export class LoginPageComponent implements OnInit {
 
   constructor(
     private loginService: LoginService,
-    private snackBarService: SnackBarService
+    private snackBarService: SnackBarService,
+    private router: Router
   ) { }
 
   public forgotPasswordVisible: boolean = false;
@@ -45,6 +47,13 @@ export class LoginPageComponent implements OnInit {
       this.snackBarService.openSuccessSnackbar("Login successfull")
       console.log(response.body)
     }
+  }
+
+  public goToForgotPasswordPage() {
+    this.forgotPasswordVisible = !this.forgotPasswordVisible;
+    this.loginService.currentUsername = this.loginForm.value.username;
+
+    this.router.navigate(['login', 'forgot-password']);
   }
 
 }

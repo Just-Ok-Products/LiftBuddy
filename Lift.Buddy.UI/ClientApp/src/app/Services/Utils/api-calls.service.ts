@@ -6,11 +6,11 @@ import { Response } from '../../Model/Response'
 })
 export class ApiCallsService {
 
-  public jwtToken: string | null = "";
+  public jwtToken: string = "";
   public defaultUrl: string = "http://localhost:5200/";
 
-  public async apiGet(url: string) {
-    let response = new Response();
+  public async apiGet<T>(url: string): Promise<Response<T>> {
+    let response = new Response<T>();
     try {
       const response = await fetch(url,
         {
@@ -22,7 +22,7 @@ export class ApiCallsService {
       if (!response.ok) {
         throw new Error(`Error on post call: ${response.status}`);
       }
-      const result = (await response.json()) as Response;
+      const result = (await response.json()) as Response<T>;
       return result;
     } catch (error) {
 
@@ -39,8 +39,8 @@ export class ApiCallsService {
     }
   }
 
-  public async apiPost(url: string, body: object) {
-    let apiResponse = new Response();
+  public async apiPost<T>(url: string, body: object): Promise<Response<T>> {
+    let apiResponse = new Response<T>();
     try {
       const response = await fetch(this.defaultUrl + url,
         {
@@ -52,13 +52,11 @@ export class ApiCallsService {
           }
         });
       if (!response.ok) {
-        throw new Error(`Error on post call: ${response.status}`);
+        throw new Error(`Error on post call: ${response.statusText} ${response.status}`);
       }
-      if (response.bodyUsed) {
-        const result = (await response.json()) as Response;
-        return result;
-      }
-      apiResponse.result = true;
+      // TODO: add handling for empty body
+      const result = (await response.json()) as Response<T>;
+      return result;
     } catch (error) {
 
       apiResponse.result = false;

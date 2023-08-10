@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Lift.Buddy.Core.Models
 {
-    public class Response
+    public class Response<T>
     {
         [JsonPropertyName("notes")]
         public string? notes { get; set; }
         [JsonPropertyName("result")]
         public bool result { get; set; }
         [JsonPropertyName("body")]
-        public string? body { get; set; }
+        public List<T> body { get; set; } = new List<T>();
     }
 }

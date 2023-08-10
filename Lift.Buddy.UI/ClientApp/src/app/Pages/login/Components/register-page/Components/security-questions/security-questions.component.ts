@@ -44,8 +44,8 @@ export class SecurityQuestionsComponent implements OnInit {
       answers.push(this.form.controls['response2'].value)
       answers.push(this.form.controls['response3'].value)
 
-      registrationCredentials!.answers = answers.join(',');
-      registrationCredentials!.questions = questions.join(',');
+      registrationCredentials!.answers = answers;
+      registrationCredentials!.questions = questions;
 
       this.loginService.registrationCredentials = registrationCredentials;
       this.onRegister.emit();

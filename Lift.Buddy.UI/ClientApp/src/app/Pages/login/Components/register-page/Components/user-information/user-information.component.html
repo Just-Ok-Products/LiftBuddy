@@ -43,7 +43,7 @@
           Confirm password
         </mat-label>
         <input onkeypress="return event.charCode != 32" [type]="confirmPasswordVisible ? 'text' : 'password'" matInput formControlName="confirmPassword">
-        <mat-icon matSuffix (click)="confirmPasswordVisible = !confirmPasswordVisible">{{passwordVisible ? 'visibility_off' : 'visibility'}}</mat-icon>
+        <mat-icon matSuffix (click)="confirmPasswordVisible = !confirmPasswordVisible">{{confirmPasswordVisible ? 'visibility_off' : 'visibility'}}</mat-icon>
         <mat-error *ngIf="form.controls['confirmPassword'].errors?.['required']">This field is required</mat-error>
         <mat-error *ngIf="form.controls['confirmPassword'].errors?.['noMatch']">Passwords doesn't match</mat-error>
       </mat-form-field>
@@ -53,7 +53,7 @@
   <mat-card-actions align="end">
     <button mat-button routerLink="..">Back</button>
 
-    <div style="width: 80%;"></div>
+    <div style="width: 100%;"></div>
 
     <button mat-button color="primary" (click)="register()">Confirm</button>
   </mat-card-actions>

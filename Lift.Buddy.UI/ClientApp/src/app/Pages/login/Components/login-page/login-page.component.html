@@ -20,14 +20,14 @@
             </mat-label>
             <input [type]="passwordVisible ? 'text' : 'password'" matInput [formControl]="password">
             <mat-icon matSuffix (click)="passwordVisible = !passwordVisible">{{passwordVisible ? 'visibility_off' : 'visibility'}}</mat-icon>
-            <mat-hint routerLink="forgot-password" *ngIf="forgotPasswordVisible" (click)="forgotPasswordVisible = !forgotPasswordVisible">Forgot password?</mat-hint>
+            <mat-hint *ngIf="forgotPasswordVisible" (click)="goToForgotPasswordPage()">Forgot password?</mat-hint>
           </mat-form-field>
         </form>
       </mat-card-content>
       <mat-card-actions align="end">
         <button mat-button routerLink="register">Register</button>
 
-        <div style="width: 80%;"></div>
+        <div style="width: 100%;"></div>
 
         <button mat-button color="primary" (click)="login()">Login</button>
       </mat-card-actions>

@@ -41,7 +41,7 @@ import { SecurityQuestionsComponent } from './Pages/login/Components/register-pa
     HomePageComponent,
     ForgotPasswordPageComponent,
     UserInformationComponent,
-    SecurityQuestionsComponent
+    SecurityQuestionsComponent,
   ],
   imports: [
     BrowserModule,

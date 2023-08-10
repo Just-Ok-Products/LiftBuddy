@@ -23,10 +23,11 @@ namespace Lift.Buddy.API.Controllers
             _loginService = loginService;
         }
 
-        [HttpGet("security-questions")]
-        public IActionResult GetSecurityQuestions()
+        [HttpPost("security-questions")]
+        public async Task< IActionResult> GetSecurityQuestions([FromBody] LoginCredentials loginCredentials)
         {
-
+            var response = await _loginService.GetSecurityQuestions(loginCredentials.Username);
+            return Ok(response);
         }
 
         [HttpPost]
@@ -52,10 +53,12 @@ namespace Lift.Buddy.API.Controllers
 
             var tokenToReturn = new JwtSecurityTokenHandler()
                 .WriteToken(jwtSecurityToken);
-            var loginResp = new Response
+            var tokens = new List<string>();
+            tokens.Add(tokenToReturn);
+            var loginResp = new Response<string>
             {
                 result = true,
-                body = tokenToReturn,
+                body = tokens,
                 notes = ""
             };
             return Ok(loginResp);

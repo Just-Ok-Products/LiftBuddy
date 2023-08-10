@@ -20,27 +20,31 @@ namespace Lift.Buddy.API.Services
             _context = context;
         }
 
-        public async Task<Response> GetSecurityQuestions(string username)
+        public async Task<Response<SecurityQuestions>> GetSecurityQuestions(string username)
         {
-            var response = new Response();
-            var securityQuestions = new SecurityQuestions();
+            var response = new Response<SecurityQuestions>();
+            var securityQuestions = new List<SecurityQuestions>();
             try
             {
                 var user = (await _context.Users.Where(x => x.UserName == username).ToListAsync()).FirstOrDefault();
                 if (user == null)
                 {
-                    throw new Exception("User doesnt exist");
+                    throw new Exception("User doesn't exist");
                 }
-                securityQuestions.Answers = user.Answers.Split(",").ToList();
-                securityQuestions.Questions = user.Questions.Split(",").ToList();
+
+                var securityQuestion = new SecurityQuestions();
+                securityQuestion.Answers = user.Answers.Split(",").ToList();
+                securityQuestion.Questions = user.Questions.Split(",").ToList();
+                securityQuestions.Add(securityQuestion);
                 response.result = true;
-                response.body = JsonSerializer.Serialize(securityQuestions);
+                response.body = securityQuestions;
             }
             catch (Exception ex)
             {
                 response.result = false;
-                response.notes = ex.Message;
+                response.notes = Utils.ErrorMessage(nameof(GetSecurityQuestions), ex);
             }
+            var t = JsonSerializer.Serialize(response);
             return response;
         }
 
@@ -62,9 +66,9 @@ namespace Lift.Buddy.API.Services
             return true;
         }
 
-        public async Task<Response> RegisterUser(RegistrationCredentials credentials)
+        public async Task<Response<RegistrationCredentials>> RegisterUser(RegistrationCredentials credentials)
         {
-            var response = new Response();
+            var response = new Response<RegistrationCredentials>();
 
             try
             {
@@ -74,8 +78,8 @@ namespace Lift.Buddy.API.Services
                 user.Surname = credentials.Surname;
                 user.Email = credentials.Email;
                 user.Password = Utils.HashString(credentials.Password);
-                user.Questions = credentials.Questions ?? "";
-                user.Answers = credentials.Answers ?? "";
+                user.Questions = String.Join(",", credentials.Questions);
+                user.Answers = String.Join(",", credentials.Answers);
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
                 response.result = true;
@@ -83,15 +87,15 @@ namespace Lift.Buddy.API.Services
             catch (Exception ex) 
             {
                 response.result = false;
-                response.notes = ex.Message;
+                response.notes = Utils.ErrorMessage(nameof(RegisterUser), ex);
             }
 
             return response;
         }
 
-        public async Task<Response> ChangePassword(LoginCredentials loginCredentials)
+        public async Task<Response<LoginCredentials>> ChangePassword(LoginCredentials loginCredentials)
         {
-            var response = new Response();
+            var response = new Response<LoginCredentials>();
             try
             {
                 var user = (await _context.Users.Where(x => x.UserName == loginCredentials.Username).ToListAsync()).FirstOrDefault();
@@ -106,7 +110,10 @@ namespace Lift.Buddy.API.Services
                 }
                 user.Password = Utils.HashString(loginCredentials.Password);
                 _context.Users.Update(user);
-                await _context.SaveChangesAsync();
+                if ((await _context.SaveChangesAsync()) == 0)
+                {
+                    throw new Exception("No changes on database");
+                }
 
                 response.result = true;
             }

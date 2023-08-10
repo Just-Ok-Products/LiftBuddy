@@ -5,6 +5,6 @@ export class RegistrationCredentials {
   public email: string | null = null;
   public password: string | null = null;
   public isAdmin: boolean = false;
-  public questions: string = '';
-  public answers: string = '';
+  public questions: string[] = [];
+  public answers: string[] = [];
 }
