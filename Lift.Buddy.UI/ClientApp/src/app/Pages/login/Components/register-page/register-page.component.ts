@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { RegistrationCredentials } from 'src/app/Model/RegistraitonCredentials';
 import { SnackBarService } from 'src/app/Services/Utils/snack-bar.service';
-import { LoginService } from '../../Services/login.service';
+import { LoginService } from '../../../../Services/login.service';
 import { Router } from '@angular/router';
 
 @Component({

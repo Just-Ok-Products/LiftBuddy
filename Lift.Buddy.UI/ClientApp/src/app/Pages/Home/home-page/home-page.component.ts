@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { LoginService } from '../../../Services/login.service';
+import { ApiCallsService } from 'src/app/Services/Utils/api-calls.service';
 
 @Component({
   selector: 'app-home-page',
@@ -7,9 +9,25 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomePageComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private loginService: LoginService,
+    private apiService: ApiCallsService
+  ) { }
 
   ngOnInit() {
+    this.initUserData();
+  }
+
+  public usernameLoggedIn: string | undefined = this.loginService.currentUsername;
+  public isLoggedIn: boolean = false;
+  private initUserData() {
+    if (this.apiService.jwtToken) {
+      this.isLoggedIn = true;
+    }
+  }
+
+  public changePage() {
+
   }
 
 }

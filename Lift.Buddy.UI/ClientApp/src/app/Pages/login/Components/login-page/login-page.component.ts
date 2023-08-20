@@ -1,6 +1,6 @@
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { LoginService } from 'src/app/Pages/login/Services/login.service';
+import { LoginService } from 'src/app/Services/login.service';
 import { LoginCredetials } from 'src/app/Model/LoginCredentials';
 import { SnackBarService } from 'src/app/Services/Utils/snack-bar.service';
 import { Router } from '@angular/router';
@@ -21,22 +21,24 @@ export class LoginPageComponent implements OnInit {
   public forgotPasswordVisible: boolean = false;
   public passwordVisible: boolean = false;
 
-  public username = new FormControl();
-  public password = new FormControl();
-
   public loginForm = new FormGroup({
-    username: this.username,
-    password: this.password
+    username: new FormControl('', Validators.required),
+    password: new FormControl('')
   })
 
   ngOnInit() {
   }
 
   public async login() {
+
+    if (!this.loginForm.valid) {
+      this.snackBarService.operErrorSnackbar("Fill the required fields.");
+      return;
+    }
     let loginCredentials = new LoginCredetials();
 
-    loginCredentials.password = this.loginForm.value.password;
-    loginCredentials.username = this.loginForm.value.username;
+    loginCredentials.password = this.loginForm.controls['password'].value;
+    loginCredentials.username = this.loginForm.controls['username'].value;
 
     var response = await this.loginService.login(loginCredentials);
 
@@ -45,13 +47,14 @@ export class LoginPageComponent implements OnInit {
       this.forgotPasswordVisible = true;
     } else {
       this.snackBarService.openSuccessSnackbar("Login successfull")
-      console.log(response.body)
+      this.loginService.currentUsername = this.loginForm.controls['username'].value!;
+      this.router.navigate(['home']);
     }
   }
 
   public goToForgotPasswordPage() {
     this.forgotPasswordVisible = !this.forgotPasswordVisible;
-    this.loginService.currentUsername = this.loginForm.value.username;
+    this.loginService.currentUsername = this.loginForm.controls['username'].value!;
 
     this.router.navigate(['login', 'forgot-password']);
   }

@@ -13,23 +13,23 @@ export class SnackBarService {
   private defaultSnackbarSettings: MatSnackBarConfig = {
     duration: 2000,
     horizontalPosition: 'end',
-    verticalPosition: 'top'
+    verticalPosition: 'top',
   };
 
-  public openSnackbar(message: string, action: string | undefined = undefined) {
+  public openSnackbar(message: string, action: string = 'cancel') {
     this.snackBar.open(message, action, this.defaultSnackbarSettings);
   }
 
-  public openSuccessSnackbar(message: string, action: string | undefined = undefined) {
+  public openSuccessSnackbar(message: string, action: string = 'cancel') {
     let modifiedsettings = this.defaultSnackbarSettings;
     modifiedsettings.panelClass = ["success-snackbar"];
     this.snackBar.open(message, action, modifiedsettings);
   }
 
-  public operErrorSnackbar(message: string, action: string | undefined = undefined) {
+  public operErrorSnackbar(message: string, action: string = 'cancel') {
     let modifiedsettings = this.defaultSnackbarSettings;
     modifiedsettings.panelClass = ["error-snackbar"];
-    modifiedsettings.duration = 5000;
+    modifiedsettings.duration = 2500;
     this.snackBar.open(message, action, modifiedsettings);
   }
 

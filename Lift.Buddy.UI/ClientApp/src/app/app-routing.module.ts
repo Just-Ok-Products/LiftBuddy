@@ -5,6 +5,10 @@ import { LoginPageComponent } from './Pages/login/Components/login-page/login-pa
 import { RegisterPageComponent } from './Pages/login/Components/register-page/register-page.component';
 import { HomePageComponent } from './Pages/Home/home-page/home-page.component';
 import { ForgotPasswordPageComponent } from './Pages/login/Components/forgot-password-page/forgot-password-page.component';
+import { WorkoutPlansComponent } from './Pages/WorkoutPlans/workout-plans.component';
+import { YourWorkoutsPageComponent } from './Pages/WorkoutPlans/Components/your-workouts-page/your-workouts-page.component';
+import { CreateUpdateWorkoutplanPageComponent } from './Pages/WorkoutPlans/Components/create-update-workoutplan-page/create-update-workoutplan-page.component';
+import { DailyWorkoutComponent } from './Pages/WorkoutPlans/Components/create-update-workoutplan-page/Components/daily-workout/daily-workout.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -17,7 +21,22 @@ const routes: Routes = [
       {path: 'register', component: RegisterPageComponent},
       {path: 'forgot-password', component: ForgotPasswordPageComponent}
     ]
-  }
+  },
+  {
+    path: 'workouts',
+    component: WorkoutPlansComponent,
+    children: [
+      {path: 'home', component: YourWorkoutsPageComponent},
+      {
+        path: 'add/:workoutId',
+        component: CreateUpdateWorkoutplanPageComponent,
+        children: [
+
+          {path: ':workoutId', component: DailyWorkoutComponent}
+        ]
+      },
+    ]
+  },
 ];
 
 @NgModule({

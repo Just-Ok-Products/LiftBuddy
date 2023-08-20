@@ -1,0 +1,9 @@
+<mat-toolbar class="header">
+  <span>LiftBuddy</span>
+  <span class="spacer"></span>
+  <button *ngIf="!isLoggedIn" mat-button routerLink="../login">Login</button>
+  <button *ngIf="isLoggedIn" mat-button (click)="logout()">
+    <i class="fa fa-sign-out"></i>
+    Welcome {{usernameLoggedIn}}
+  </button>
+</mat-toolbar>

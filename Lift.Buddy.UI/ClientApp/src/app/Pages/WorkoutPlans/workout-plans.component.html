@@ -1,0 +1,13 @@
+<app-page-structure
+  [left-menu]="leftMenu"
+  [main]="main"
+>
+</app-page-structure>
+
+<ng-template #leftMenu>
+  <app-left-menu/>
+</ng-template>
+
+<ng-template #main>
+  <router-outlet></router-outlet>
+</ng-template>

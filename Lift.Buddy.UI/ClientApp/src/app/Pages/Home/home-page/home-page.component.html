@@ -1,3 +1,9 @@
-<p>
-  home-page works!
-</p>
+<app-page-structure
+  [left-menu]="leftMenu"
+>
+</app-page-structure>
+
+<ng-template #leftMenu>
+  <app-left-menu/>
+</ng-template>
+

@@ -1,4 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+@import '../node_modules/bootstrap/scss/bootstrap.scss';
+
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
@@ -7,11 +9,16 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   display: flex;
 }
 
+.spacer {
+  flex: 1 1 auto;
+}
+
 mat-form-field {
   width: 100%;
 }
 
 .mat-mdc-snack-bar-container {
+  --mat-snack-bar-button-color: #000;
   &.error-snackbar {
     --mdc-snackbar-container-color: #e57373;
     --mat-mdc-snack-bar-button-color: #000;
@@ -27,4 +34,12 @@ mat-form-field {
     --mat-mdc-snack-bar-button-color: #000;
     --mdc-snackbar-supporting-text-color: #000;
   }
+}
+
+.fa {
+  margin: 5px;
+}
+
+input[type=time]::-webkit-datetime-edit-ampm-field {
+  display: none;
 }

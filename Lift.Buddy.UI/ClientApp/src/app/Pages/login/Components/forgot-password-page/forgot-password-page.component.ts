@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { LoginService } from '../../Services/login.service';
+import { LoginService } from '../../../../Services/login.service';
 import { LoginCredetials } from 'src/app/Model/LoginCredentials';
 import { SnackBarService } from 'src/app/Services/Utils/snack-bar.service';
 import { SecurityQuestions } from 'src/app/Model/SecurityQuestions';

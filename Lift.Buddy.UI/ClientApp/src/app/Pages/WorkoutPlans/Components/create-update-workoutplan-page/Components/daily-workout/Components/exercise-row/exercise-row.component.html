@@ -1,0 +1,29 @@
+<form [formGroup]="exerciseForm" class="row g-3" (onChange)="updateExercise()">
+  <div class="col-1">
+    <mat-form-field>
+      <input readonly="true" [value]="(index ?? 0) + 1" matInput/>
+    </mat-form-field>
+  </div>
+  <mat-form-field class="col-3">
+    <input matInput formControlName="name"/>
+  </mat-form-field>
+  <mat-form-field class="col-2">
+    <input min="1" value="1" type="number" formControlName="reps" matInput/>
+  </mat-form-field>
+  <mat-form-field class="col-2">
+    <input min="1" value="1" type="number" formControlName="series" matInput/>
+  </mat-form-field>
+  <mat-form-field class="col-2">
+    <input type="time" formControlName="rest" matInput/>
+  </mat-form-field>
+  <div class="col-1">
+    <button mat-icon-button class="button">
+      <mat-icon>more_horiz</mat-icon>
+    </button>
+  </div>
+  <div class="col-1">
+    <button mat-icon-button class="button" (click)="remove()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</form>

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { RegistrationCredentials } from 'src/app/Model/RegistraitonCredentials';
-import { LoginService } from 'src/app/Pages/login/Services/login.service';
+import { LoginService } from 'src/app/Services/login.service';
 
 @Component({
   selector: 'app-security-questions',

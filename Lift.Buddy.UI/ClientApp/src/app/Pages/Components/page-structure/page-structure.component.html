@@ -1,0 +1,16 @@
+<app-header/>
+<div class="row row-tab page">
+  <div class="col-2 h-100 border">
+    <ng-container [ngTemplateOutlet]="leftMenu">
+    </ng-container>
+  </div>
+  <div [class]="'h-100 border col-' + (8 + (rightMenu ? 0 : 2) + (leftMenu ? 0 : 2))">
+    <ng-container [ngTemplateOutlet]="main">
+    </ng-container>
+  </div>
+  <div *ngIf="rightMenu" class="col-2 h-100 border">
+    <ng-container [ngTemplateOutlet]="rightMenu">
+    </ng-container>
+  </div>
+
+</div>

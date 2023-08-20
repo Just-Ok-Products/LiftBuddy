@@ -1,0 +1,18 @@
+<mat-tree [treeControl]="navigationTreeControl" [dataSource]="navigationTreeData">
+  <!-- This is the tree node template for leaf nodes -->
+  <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+    <!-- use a disabled button to provide padding for tree leaf -->
+    <button mat-button [routerLink]="'../' + node.path">
+      <i [class]="'fa fa-' + node.icon"></i>
+      {{node.name | uppercase}}
+    </button>
+
+  </mat-tree-node>
+  <!-- This is the tree node template for expandable nodes -->
+  <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+    <button mat-button matTreeNodeToggle>
+      <i [class]="'fa fa-' + (navigationTreeControl.isExpanded(node) ? 'chevron-down' : 'chevron-right')"></i>
+      {{node.name | uppercase}}
+    </button>
+  </mat-tree-node>
+</mat-tree>

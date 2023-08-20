@@ -1,5 +1,7 @@
 ﻿using Lift.Buddy.Core.DB.Models;
+using Lift.Buddy.Core.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace Lift.Buddy.Core.DB
 {
@@ -8,6 +10,7 @@ namespace Lift.Buddy.Core.DB
         private readonly IConfiguration _configuration;
 
         public DbSet<User> Users { get; set; }
+        public DbSet<WorkoutSchedule> WorkoutSchedules { get; set; }
 
         public DBContext(IConfiguration configuration)
         {
@@ -41,8 +44,31 @@ namespace Lift.Buddy.Core.DB
                 entity.Property(e => e.IsAdmin).IsRequired();
             });
 
+            modelBuilder.Entity<WorkoutSchedule>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.WorkoutDays)
+                    .HasConversion<string>(exercises => TrainingToString(exercises), dbExercises => StringToTraining(dbExercises));
+            });
+
             OnModelCreatingPartial(modelBuilder);
         }
+        #region Methods
+        private string TrainingToString(List<WorkoutDay> exercises)
+        {
+            return JsonSerializer.Serialize(exercises.ToArray());
+        }
+        private List<WorkoutDay> StringToTraining(string exercises)
+        {
+            var trainings = JsonSerializer.Deserialize<WorkoutDay[]>(exercises);
+            if (trainings == null)
+            {
+                return new List<WorkoutDay>();
+            }
+            return trainings.ToList();
+        }
+        #endregion
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }

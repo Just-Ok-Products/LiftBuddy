@@ -12,13 +12,13 @@
             <mat-label>
               Username
             </mat-label>
-            <input matInput [formControl]="username">
+            <input matInput formControlName="username">
           </mat-form-field>
           <mat-form-field>
             <mat-label>
               Password
             </mat-label>
-            <input [type]="passwordVisible ? 'text' : 'password'" matInput [formControl]="password">
+            <input [type]="passwordVisible ? 'text' : 'password'" matInput formControlName="password">
             <mat-icon matSuffix (click)="passwordVisible = !passwordVisible">{{passwordVisible ? 'visibility_off' : 'visibility'}}</mat-icon>
             <mat-hint *ngIf="forgotPasswordVisible" (click)="goToForgotPasswordPage()">Forgot password?</mat-hint>
           </mat-form-field>
