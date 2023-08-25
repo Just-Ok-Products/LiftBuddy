@@ -23,6 +23,24 @@ namespace Lift.Buddy.API.Controllers
             _loginService = loginService;
         }
 
+        #region User Data
+        [HttpPost("user-data")]
+        [Authorize]
+        public async Task<IActionResult> GetUserData([FromBody] UserData userData)
+        {
+            var response = await _loginService.GetUserData(userData);
+            return Ok(response);
+        }
+
+        [HttpPut("user-data")]
+        [Authorize]
+        public async Task<IActionResult> UpdateUserData([FromBody] UserData userData)
+        {
+            var response = await _loginService.UpdateUserData(userData);
+            return NoContent();
+        }
+        #endregion
+
         [HttpPost("security-questions")]
         public async Task< IActionResult> GetSecurityQuestions([FromBody] LoginCredentials loginCredentials)
         {

@@ -45,6 +45,8 @@ import { YourWorkoutsPageComponent } from './Pages/WorkoutPlans/Components/your-
 import { PageStructureComponent } from './Pages/Components/page-structure/page-structure.component';
 import { ExerciseRowComponent } from './Pages/WorkoutPlans/Components/create-update-workoutplan-page/Components/daily-workout/Components/exercise-row/exercise-row.component';
 import { DailyWorkoutComponent } from './Pages/WorkoutPlans/Components/create-update-workoutplan-page/Components/daily-workout/daily-workout.component';
+import { UserDataComponent } from './Pages/UserData/user-data.component';
+import { UserDataFormComponent } from './Pages/UserData/Components/user-data-form/user-data-form.component';
 //#endregion
 
 @NgModule({
@@ -64,7 +66,9 @@ import { DailyWorkoutComponent } from './Pages/WorkoutPlans/Components/create-up
     YourWorkoutsPageComponent,
     PageStructureComponent,
     ExerciseRowComponent,
-    DailyWorkoutComponent
+    DailyWorkoutComponent,
+    UserDataComponent,
+    UserDataFormComponent
   ],
   imports: [
     BrowserModule,

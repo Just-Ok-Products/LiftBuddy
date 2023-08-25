@@ -6,7 +6,7 @@ import { Response } from '../../Model/Response'
 })
 export class ApiCallsService {
 
-  public jwtToken: string | undefined;
+  public static jwtToken: string | undefined;
   public defaultUrl: string = "http://localhost:5200/";
 
   public async apiGet<T>(url: string): Promise<Response<T>> {
@@ -17,7 +17,7 @@ export class ApiCallsService {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.jwtToken}`
+            'Authorization': `Bearer ${ApiCallsService.jwtToken}`
           }
         });
       if (!response.ok) {
@@ -49,7 +49,7 @@ export class ApiCallsService {
           body: JSON.stringify(body),
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.jwtToken}`
+            'Authorization': `Bearer ${ApiCallsService.jwtToken}`
           }
         });
       if (!response.ok) {
@@ -83,7 +83,7 @@ export class ApiCallsService {
           body: JSON.stringify(body),
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.jwtToken}`
+            'Authorization': `Bearer ${ApiCallsService.jwtToken}`
           }
         });
       if (!response.ok) {

@@ -7,16 +7,8 @@ using System.Threading.Tasks;
 
 namespace Lift.Buddy.Core.Models
 {
-    public class RegistrationCredentials
+    public class RegistrationCredentials: UserData
     {
-        [JsonPropertyName("username")]
-        public string Username { get; set; } = string.Empty;
-        [JsonPropertyName("name")]
-        public string Name { get; set; } = string.Empty;
-        [JsonPropertyName("surname")]
-        public string Surname { get; set; } = string.Empty;
-        [JsonPropertyName("email")]
-        public string Email { get; set; } = string.Empty;
         [JsonPropertyName("password")]
         public string Password { get; set; } = string.Empty;
         [JsonPropertyName("questions")]

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiCallsService } from 'src/app/Services/Utils/api-calls.service';
+import { SnackBarService } from 'src/app/Services/Utils/snack-bar.service';
 import { LoginService } from 'src/app/Services/login.service';
 
 @Component({
@@ -11,7 +12,7 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private loginService: LoginService,
-    private apiService: ApiCallsService
+    private snackbarService: SnackBarService
   ) { }
 
   ngOnInit() {
@@ -21,14 +22,18 @@ export class HeaderComponent implements OnInit {
   public usernameLoggedIn: string | undefined = this.loginService.currentUsername;
   public isLoggedIn: boolean = false;
   private initUserData() {
-    if (this.apiService.jwtToken) {
+    if (ApiCallsService.jwtToken) {
       this.isLoggedIn = true;
     }
   }
 
   public logout() {
-    this.loginService.currentUsername = '';
-    this.isLoggedIn = false;
+    if (this.loginService.logout()) {
+      this.isLoggedIn = false;
+      this.snackbarService.openSuccessSnackbar('Succesfully logged out');
+    } else {
+      this.snackbarService.operErrorSnackbar('Error during loggin out');
+    }
   }
 
 }

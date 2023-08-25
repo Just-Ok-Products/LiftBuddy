@@ -8,14 +8,18 @@
     <span class="col-2">Rest</span>
     <span class="col-1"></span>
   </div>
-  <app-exercise-row
-    *ngFor="let exercise of exercises?.value; let idx = index"
-    [exercise]="exercise"
-    [index]="idx"
-    (onDelete)="remove($event)"
-    (onChange)="1+1"
-  ></app-exercise-row>
+  <div style="overflow-y: scroll;height: 70vh;overflow-x: hidden;">
+    <app-exercise-row
+      *ngFor="let exercise of exercises?.value; let idx = index"
+      [exercise]="exercise"
+      [index]="idx"
+      (onDelete)="remove($event)"
+      (onChange)="1+1"
+    ></app-exercise-row>
+  </div>
 </div>
 <div class="row">
-  <button mat-button (click)="addExercise()" class="col-2">Add</button>
+  <button mat-raised-button (click)="addExercise()" class="col-2">Add</button>
+  <div class="col-8"></div>
+  <button color="primary" class="col-2" mat-raised-button (click)="save()">Save</button>
 </div>

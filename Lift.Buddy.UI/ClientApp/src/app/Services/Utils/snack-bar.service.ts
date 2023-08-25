@@ -12,7 +12,7 @@ export class SnackBarService {
 
   private defaultSnackbarSettings: MatSnackBarConfig = {
     duration: 2000,
-    horizontalPosition: 'end',
+    horizontalPosition: 'center',
     verticalPosition: 'top',
   };
 

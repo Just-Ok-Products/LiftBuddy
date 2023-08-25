@@ -1,4 +1,4 @@
-<form [formGroup]="exerciseForm" class="row g-3" (onChange)="updateExercise()">
+<form [formGroup]="exerciseForm" class="row" (onChange)="updateExercise()">
   <div class="col-1">
     <mat-form-field>
       <input readonly="true" [value]="(index ?? 0) + 1" matInput/>

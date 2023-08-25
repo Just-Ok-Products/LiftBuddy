@@ -1,0 +1,38 @@
+<app-page-structure
+  [left-menu]="leftMenu"
+  [main]="main"
+>
+</app-page-structure>
+
+<ng-template #leftMenu>
+  <app-left-menu/>
+</ng-template>
+
+<ng-template #main>
+  <mat-card *ngIf="userData != undefined">
+    <mat-card-header>
+      <mat-card-title>
+        Welcome {{userData.username}}
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="container">
+        <div class="row">
+          <div class="col-4">
+            <img width="100%" matCardImage src="../../../../assets/default-user-image.png"/>
+          </div>
+          <div class="col-8">
+            <app-user-data-form
+              [userData]="userData"
+            ></app-user-data-form>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-button>Change image</button>
+      <button color="primary" mat-raised-button (click)="save()">Save changes</button>
+    </mat-card-actions>
+  </mat-card>
+</ng-template>
+

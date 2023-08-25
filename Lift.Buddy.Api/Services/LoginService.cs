@@ -126,5 +126,71 @@ namespace Lift.Buddy.API.Services
             return response;
         }
 
+        #region User Data
+        public async Task<Response<UserData>> GetUserData(UserData userData)
+        {
+            var response = new Response<UserData>();
+
+            try
+            {
+                var user = (await _context.Users.Where(x => x.UserName == userData.Username).ToListAsync()).FirstOrDefault();
+
+                if (user == null)
+                {
+                    throw new Exception($"No user was found with username {userData.Username}.");
+                }
+                userData.Username = user.UserName ?? "";
+                userData.Name = user.Name ?? "";
+                userData.Surname = user.Surname ?? "";
+                userData.Email = user.Email ?? "";
+
+                response.body.Add(userData);
+                response.result = true;
+
+            }
+            catch (Exception ex)
+            {
+                response.result = false;
+                response.notes = Utils.ErrorMessage(nameof(GetUserData), ex);
+            }
+
+            return response;
+        }
+
+        public async Task<Response<UserData>> UpdateUserData(UserData userData)
+        {
+            var response = new Response<UserData>();
+
+            try
+            {
+                var user = (await _context.Users.Where(x => x.UserName == userData.Username).ToArrayAsync()).FirstOrDefault();
+
+                if (user == null)
+                {
+                    throw new Exception($"No user was found with username {userData.Username}.");
+                }
+
+                user.Surname = userData.Surname;
+                user.Name = userData.Name;
+                user.Email = userData.Email;
+
+                _context.Users.Update(user);
+
+                if ((await _context.SaveChangesAsync()) < 1)
+                {
+                    throw new Exception($"Failed to update database.");
+                }
+
+                response.result = true;
+            }
+            catch (Exception ex)
+            {
+                response.result = false;
+                response.notes = Utils.ErrorMessage(nameof(UpdateUserData), ex);
+            }
+
+            return response;
+        }
+        #endregion
     }
 }

@@ -21,7 +21,7 @@ export class HomePageComponent implements OnInit {
   public usernameLoggedIn: string | undefined = this.loginService.currentUsername;
   public isLoggedIn: boolean = false;
   private initUserData() {
-    if (this.apiService.jwtToken) {
+    if (ApiCallsService.jwtToken) {
       this.isLoggedIn = true;
     }
   }

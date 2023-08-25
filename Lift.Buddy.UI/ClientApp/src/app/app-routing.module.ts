@@ -9,9 +9,12 @@ import { WorkoutPlansComponent } from './Pages/WorkoutPlans/workout-plans.compon
 import { YourWorkoutsPageComponent } from './Pages/WorkoutPlans/Components/your-workouts-page/your-workouts-page.component';
 import { CreateUpdateWorkoutplanPageComponent } from './Pages/WorkoutPlans/Components/create-update-workoutplan-page/create-update-workoutplan-page.component';
 import { DailyWorkoutComponent } from './Pages/WorkoutPlans/Components/create-update-workoutplan-page/Components/daily-workout/daily-workout.component';
+import { UserDataComponent } from './Pages/UserData/user-data.component';
+import { AuthGuard } from './Services/Guards/AuthGuard';
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
+  {path: 'user', component: UserDataComponent, canActivate: [AuthGuard]},
   {path: 'home', component: HomePageComponent},
   {
     path: 'login',

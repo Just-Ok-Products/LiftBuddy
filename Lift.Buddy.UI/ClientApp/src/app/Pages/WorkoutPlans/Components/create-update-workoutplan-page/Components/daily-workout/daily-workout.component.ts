@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Exercize } from 'src/app/Model/Exercise';
 import { WorkoutDay } from 'src/app/Model/WorkoutDay';
@@ -16,13 +16,14 @@ export class DailyWorkoutComponent implements OnInit {
   @Input() day: number = 0;
   @Input() workschedule: WorkoutSchedule | undefined;
   @Input() exercises: FormControl<Exercize[] | null> | undefined;
+  @Output() onSave: EventEmitter<any> = new EventEmitter();
 
   ngOnInit() {
     this.initExercizes();
   }
 
   private initExercizes() {
-    if (this.workschedule?.workoutDays[this.day].exercises.length == 0) {
+    if (this.workschedule?.workoutDays[this.day]?.exercises?.length == 0) {
       return;
     }
   }
@@ -39,6 +40,10 @@ export class DailyWorkoutComponent implements OnInit {
     } else {
       this.exercises?.value?.push(new Exercize());
     }
+  }
+
+  public save() {
+    this.onSave.emit();
   }
 
   public remove(index: number) {

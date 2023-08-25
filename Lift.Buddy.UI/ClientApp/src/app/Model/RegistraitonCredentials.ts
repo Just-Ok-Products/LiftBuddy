@@ -1,8 +1,6 @@
-export class RegistrationCredentials {
-  public username: string | null = null;
-  public name: string | null = null;
-  public surname: string | null = null;
-  public email: string | null = null;
+import { UserData } from "./UserData";
+
+export class RegistrationCredentials extends UserData {
   public password: string | null = null;
   public isAdmin: boolean = false;
   public questions: string[] = [];

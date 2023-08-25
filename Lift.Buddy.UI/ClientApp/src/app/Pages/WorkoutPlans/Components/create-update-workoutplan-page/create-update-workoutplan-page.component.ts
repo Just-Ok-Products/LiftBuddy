@@ -54,9 +54,11 @@ export class CreateUpdateWorkoutplanPageComponent implements OnInit {
       if (workplanResp.body.length == 0) {
         this.workschedule = new WorkoutSchedule();
       } else {
-        this.workschedule = workplanResp.body[0];
-        const day: number = workplanResp.body[0].workoutDays[0].day!;
-        const exercises = this.workschedule?.workoutDays.find(x => x.day == day)?.exercises;
+        let worksched = workplanResp.body[0];
+        this.workschedule = worksched;
+        worksched.workoutDays.sort((x, y) => x.day! - y.day!);
+        const day: number = worksched.workoutDays[0].day!;
+        const exercises = worksched.workoutDays.find(x => x.day == day)?.exercises;
         this.workoutDayForm.controls['trainingDay'].setValue(day);
         this.workoutDayForm.controls['exercises'].setValue(exercises);
       }

@@ -1,10 +1,11 @@
 <div class="container">
   <div class="row">
     <form [formGroup]="workoutDayForm">
-      <div class="row row-tab mt-3">
+      <div class="row mt-3">
         <div class="col-6">
           <mat-form-field>
-            <input readonly="true" [value]="'Workout plan with id ' + workschedule?.id" matInput/>
+            <mat-label *ngIf="workschedule?.id != undefined ? false : true">Workout plan name</mat-label>
+            <input [readonly]="workschedule?.id == undefined ? false : true" [value]="workschedule?.id != undefined ? 'Workout plan with id ' + workschedule?.id : ''" matInput/>
           </mat-form-field>
         </div>
         <div class="col-6">
@@ -16,17 +17,14 @@
           </mat-form-field>
         </div>
       </div>
-      <app-daily-workout
-        [workschedule]="workschedule"
-        [day]="workoutDayForm.controls['trainingDay'].value"
-        [exercises]="exercises"
-      ></app-daily-workout>
+      <div class="row">
+        <app-daily-workout
+          [workschedule]="workschedule"
+          [day]="workoutDayForm.controls['trainingDay'].value"
+          [exercises]="exercises"
+          (onSave)="save()"
+        ></app-daily-workout>
+      </div>
     </form>
-  </div>
-  <div class="fixed-bottom">
-    <div class="row">
-      <div class="col-10"></div>
-      <button color="primary" class="col-2" mat-button (click)="save()">Save</button>
-    </div>
   </div>
 </div>
