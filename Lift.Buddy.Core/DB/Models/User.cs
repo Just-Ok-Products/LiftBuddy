@@ -6,7 +6,7 @@ namespace Lift.Buddy.Core.DB.Models
     public class User
     {
         [Key]
-        public string? UserName { get; set; }
+        public string UserName { get; set; }
         public string? Name { get; set; }
         public string? Surname { get; set; }
         public string? Email { get; set; }
@@ -16,5 +16,9 @@ namespace Lift.Buddy.Core.DB.Models
         public string Questions { get; set; }
         public string Answers { get; set; }
 
+        [JsonIgnore]
+        public virtual ICollection<WorkoutAssignment>? WorkoutAssignments { get; set; }
+        [JsonIgnore]
+        public virtual UserPR UserPR { get; set; }
     }
 }

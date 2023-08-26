@@ -3,6 +3,7 @@ import { ApiCallsService } from './Utils/api-calls.service';
 import { WorkoutSchedule } from '../Model/WorkoutSchedule';
 import { BehaviorSubject } from 'rxjs';
 import { SnackBarService } from './Utils/snack-bar.service';
+import { LoginService } from './login.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,7 @@ export class WorkoutplanService {
 
 constructor(
   private apiService: ApiCallsService,
+  private loginService: LoginService,
   private snackbarService: SnackBarService
 ) { }
 
@@ -31,8 +33,13 @@ public setDay(day: number) {
 
 private defaultUrl: string = 'api/WorkoutSchedule';
 
-public async getWorkoutPlan(id: number) {
-  const response = await this.apiService.apiGet<WorkoutSchedule>(this.defaultUrl + `/${id}`);
+public async getWorkoutPlanById(id: number) {
+  const response = await this.apiService.apiGet<WorkoutSchedule>(this.defaultUrl + `/id/${id}`);
+  return response;
+}
+
+public async getWorkoutPlanByUser() {
+  const response = await this.apiService.apiGet<WorkoutSchedule>(this.defaultUrl + `/${this.loginService.currentUsername}`);
   return response;
 }
 

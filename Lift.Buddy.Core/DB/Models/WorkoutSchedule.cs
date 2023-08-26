@@ -13,9 +13,14 @@ namespace Lift.Buddy.Core.DB.Models
         [JsonPropertyName("id")]
         public int Id { get; set; }
 
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+
         [JsonPropertyName("workoutDays")]
         public List<WorkoutDay> WorkoutDays { get; set; } = new List<WorkoutDay>();
 
+        [JsonIgnore]
+        public virtual ICollection<WorkoutAssignment>? WorkoutAssignments { get; set; }
         
     }
 }

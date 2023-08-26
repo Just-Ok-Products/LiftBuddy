@@ -1,0 +1,32 @@
+<form [formGroup]="exerciseForm">
+  <div class="row">
+    <div class="col-1">
+      <mat-form-field>
+        <mat-label>Index</mat-label>
+        <input matInput [value]="index">
+      </mat-form-field>
+    </div>
+    <div class="col-5">
+      <mat-form-field>
+        <mat-label>Exercize name</mat-label>
+        <input matInput formControlName="name">
+      </mat-form-field>
+    </div>
+    <!-- Weight exercize type -->
+    <div class="col-4">
+      <mat-form-field>
+        <mat-label>Weight</mat-label>
+        <input matInput formControlName="weight">
+      </mat-form-field>
+    </div>
+    <div class="col-2">
+      <mat-form-field>
+        <mat-label>Unit of measure</mat-label>
+        <mat-select formControlName="unitOfMeasure">
+          <mat-option [value]="uom" *ngFor="let uom of UOMs">{{uom}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <!-- Other types still WIP-->
+  </div>
+</form>

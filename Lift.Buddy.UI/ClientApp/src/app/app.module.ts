@@ -33,7 +33,7 @@ import { LoginPageComponent } from './Pages/login/Components/login-page/login-pa
 import { LoginContainerComponent } from './Pages/login/login-container.component';
 import { RegisterPageComponent } from './Pages/login/Components/register-page/register-page.component';
 import { ForgotPasswordPageComponent } from './Pages/login/Components/forgot-password-page/forgot-password-page.component';
-import { HomePageComponent } from './Pages/Home/home-page/home-page.component';
+import { HomePageComponent } from './Pages/Home/home-page.component';
 import { UserInformationComponent } from './Pages/login/Components/register-page/Components/user-information/user-information.component';
 import { SecurityQuestionsComponent } from './Pages/login/Components/register-page/Components/security-questions/security-questions.component';
 import { LeftMenuComponent } from './Pages/Components/left-menu/left-menu.component';
@@ -47,6 +47,10 @@ import { ExerciseRowComponent } from './Pages/WorkoutPlans/Components/create-upd
 import { DailyWorkoutComponent } from './Pages/WorkoutPlans/Components/create-update-workoutplan-page/Components/daily-workout/daily-workout.component';
 import { UserDataComponent } from './Pages/UserData/user-data.component';
 import { UserDataFormComponent } from './Pages/UserData/Components/user-data-form/user-data-form.component';
+import { PrComponent } from './Pages/PR/pr.component';
+import { PrMenuComponent } from './Pages/PR/Components/pr-menu/pr-menu.component';
+import { PrExerciseComponent } from './Pages/PR/Components/pr-exercise/pr-exercise.component';
+import { PrService } from './Services/pr.service';
 //#endregion
 
 @NgModule({
@@ -68,7 +72,10 @@ import { UserDataFormComponent } from './Pages/UserData/Components/user-data-for
     ExerciseRowComponent,
     DailyWorkoutComponent,
     UserDataComponent,
-    UserDataFormComponent
+    UserDataFormComponent,
+    PrComponent,
+    PrMenuComponent,
+    PrExerciseComponent
   ],
   imports: [
     BrowserModule,
@@ -91,7 +98,7 @@ import { UserDataFormComponent } from './Pages/UserData/Components/user-data-for
     ScrollingModule,
     MatCheckboxModule
   ],
-  providers: [LoginService, ApiCallsService],
+  providers: [LoginService, ApiCallsService, PrService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

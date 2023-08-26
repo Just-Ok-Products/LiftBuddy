@@ -2,6 +2,7 @@
 using Lift.Buddy.Core.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Lift.Buddy.Core.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20230826145940_AddedWorkoutUserRelationAndName")]
+    partial class AddedWorkoutUserRelationAndName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.9");
@@ -56,22 +59,6 @@ namespace Lift.Buddy.Core.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Lift.Buddy.Core.DB.Models.UserPR", b =>
-                {
-                    b.Property<string>("Username")
-                        .HasColumnType("TEXT")
-                        .HasAnnotation("Relational:JsonPropertyName", "username");
-
-                    b.Property<string>("PersonalRecords")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasAnnotation("Relational:JsonPropertyName", "personalRecords");
-
-                    b.HasKey("Username");
-
-                    b.ToTable("UserPRs");
-                });
-
             modelBuilder.Entity("Lift.Buddy.Core.DB.Models.WorkoutAssignment", b =>
                 {
                     b.Property<string>("WorkoutUser")
@@ -109,17 +96,6 @@ namespace Lift.Buddy.Core.Migrations
                     b.ToTable("WorkoutSchedules");
                 });
 
-            modelBuilder.Entity("Lift.Buddy.Core.DB.Models.UserPR", b =>
-                {
-                    b.HasOne("Lift.Buddy.Core.DB.Models.User", "User")
-                        .WithOne("UserPR")
-                        .HasForeignKey("Lift.Buddy.Core.DB.Models.UserPR", "Username")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Lift.Buddy.Core.DB.Models.WorkoutAssignment", b =>
                 {
                     b.HasOne("Lift.Buddy.Core.DB.Models.WorkoutSchedule", "WorkoutSchedule")
@@ -141,9 +117,6 @@ namespace Lift.Buddy.Core.Migrations
 
             modelBuilder.Entity("Lift.Buddy.Core.DB.Models.User", b =>
                 {
-                    b.Navigation("UserPR")
-                        .IsRequired();
-
                     b.Navigation("WorkoutAssignments");
                 });
 

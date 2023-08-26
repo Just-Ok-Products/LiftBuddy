@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ApiCallsService } from 'src/app/Services/Utils/api-calls.service';
 import { SnackBarService } from 'src/app/Services/Utils/snack-bar.service';
 import { LoginService } from 'src/app/Services/login.service';
@@ -12,7 +13,8 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private loginService: LoginService,
-    private snackbarService: SnackBarService
+    private snackbarService: SnackBarService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -34,6 +36,7 @@ export class HeaderComponent implements OnInit {
     } else {
       this.snackbarService.operErrorSnackbar('Error during loggin out');
     }
+    this.router.navigate(['login']);
   }
 
 }

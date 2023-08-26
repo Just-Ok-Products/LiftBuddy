@@ -11,5 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - User authenication and registration
+- User data section
+- Workout plan section
+- PR section
 ### Fixed
 ### Changed

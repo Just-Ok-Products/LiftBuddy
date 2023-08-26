@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { RegistrationCredentials } from 'src/app/Model/RegistraitonCredentials';
+import { SnackBarService } from 'src/app/Services/Utils/snack-bar.service';
 import { LoginService } from 'src/app/Services/login.service';
 
 @Component({
@@ -23,7 +24,8 @@ export class UserInformationComponent implements OnInit {
   });
 
   constructor(
-    private loginService: LoginService
+    private loginService: LoginService,
+    private snackbarService: SnackBarService
   ) { }
 
   ngOnInit() {
@@ -39,6 +41,10 @@ export class UserInformationComponent implements OnInit {
   }
 
   public register() {
+    if (!this.form.valid) {
+      this.snackbarService.operErrorSnackbar('Fill the form correctly.');
+      return;
+    }
     let registrationCredentials: RegistrationCredentials = new RegistrationCredentials();
     registrationCredentials.username = this.form?.controls['username'].value;
     registrationCredentials.name = this.form?.controls['name'].value;

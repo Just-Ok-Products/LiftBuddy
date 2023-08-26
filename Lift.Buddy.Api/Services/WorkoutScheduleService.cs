@@ -43,6 +43,42 @@ namespace Lift.Buddy.API.Services
 
             return response;
         }
+
+        public async Task<Response<WorkoutSchedule>> GetWorkoutScheduleByUser(string username)
+        {
+            var response = new Response<WorkoutSchedule>();
+
+            try
+            {
+                if (username == String.Empty)
+                {
+                    throw new Exception("No user given.");
+                }
+                 
+                var workoutAssignments = await _context.WorkoutAssignments
+                    .Where(x => x.WorkoutUser == username)
+                    .ToListAsync();
+
+                List<WorkoutSchedule> workoutSchedules;
+                foreach (var workoutAssignment in workoutAssignments)
+                {
+                    workoutSchedules = await _context.WorkoutSchedules
+                        .Where(x => x.WorkoutAssignments.Contains(workoutAssignment))
+                        .ToListAsync();
+
+                    response.body = response.body.Concat(workoutSchedules).ToList();
+                }
+
+                response.result = true;
+            }
+            catch (Exception ex)
+            {
+                response.result = false;
+                response.notes = Utils.ErrorMessage(nameof(GetWorkoutSchedule), ex);
+            }
+
+            return response;
+        }
         #endregion
 
         #region Add

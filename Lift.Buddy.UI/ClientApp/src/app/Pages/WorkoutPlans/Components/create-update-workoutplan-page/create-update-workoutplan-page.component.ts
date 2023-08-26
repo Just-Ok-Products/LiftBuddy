@@ -16,7 +16,6 @@ import { SnackBarService } from 'src/app/Services/Utils/snack-bar.service';
 export class CreateUpdateWorkoutplanPageComponent implements OnInit {
 
   constructor(
-    private apiSevice: ApiCallsService,
     private activatedRoute: ActivatedRoute,
     private workoutPlanSerivice: WorkoutplanService,
     private snackbarService: SnackBarService
@@ -25,7 +24,16 @@ export class CreateUpdateWorkoutplanPageComponent implements OnInit {
    async ngOnInit() {
     this.initDates();
     await this.initWorkschedule();
+    this.initFormData();
   }
+
+  private initFormData() {
+    this.workoutDayForm.controls['name'].valueChanges.subscribe(name => {
+      this.workschedule.name = name;
+    })
+  }
+
+  //#region Init Dates
 
   /** Days of the week */
   public days: string[] = [];
@@ -37,7 +45,9 @@ export class CreateUpdateWorkoutplanPageComponent implements OnInit {
     }
   }
 
-  public workschedule: WorkoutSchedule | undefined;
+  //#endregion
+
+  public workschedule: WorkoutSchedule = new WorkoutSchedule();
   private async initWorkschedule() {
     try {
       const workoutId = +(this.activatedRoute.snapshot.paramMap.get('workoutId') ?? -1);
@@ -45,7 +55,7 @@ export class CreateUpdateWorkoutplanPageComponent implements OnInit {
         this.workschedule = new WorkoutSchedule();
         return;
       }
-      const workplanResp = await this.workoutPlanSerivice.getWorkoutPlan(workoutId);
+      const workplanResp = await this.workoutPlanSerivice.getWorkoutPlanById(workoutId);
       if (!workplanResp.result) {
         this.snackbarService.operErrorSnackbar("Failed to load workout plan");
         return;
@@ -56,9 +66,10 @@ export class CreateUpdateWorkoutplanPageComponent implements OnInit {
       } else {
         let worksched = workplanResp.body[0];
         this.workschedule = worksched;
-        worksched.workoutDays.sort((x, y) => x.day! - y.day!);
+        worksched.workoutDays.sort((x: any, y: any) => x.day! - y.day!);
         const day: number = worksched.workoutDays[0].day!;
-        const exercises = worksched.workoutDays.find(x => x.day == day)?.exercises;
+        const exercises = worksched.workoutDays.find((x: any) => x.day == day)?.exercises;
+        this.workoutDayForm.controls['name'].setValue(this.workschedule.name);
         this.workoutDayForm.controls['trainingDay'].setValue(day);
         this.workoutDayForm.controls['exercises'].setValue(exercises);
       }
@@ -69,6 +80,7 @@ export class CreateUpdateWorkoutplanPageComponent implements OnInit {
 
   public exercises = new FormControl<Exercize[]>([]);
   public workoutDayForm: FormGroup = new FormGroup({
+    name: new FormControl(),
     trainingDay: new FormControl(0),
     exercises: this.exercises
   });

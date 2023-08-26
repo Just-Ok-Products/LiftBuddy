@@ -24,10 +24,17 @@ namespace Lift.Buddy.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("id/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var response = await _workoutScheduleService.GetWorkoutSchedule(id);
+            return Ok(response);
+        }
+
+        [HttpGet("{username}")]
+        public async Task<IActionResult> GetByUser(string username)
+        {
+            var response = await _workoutScheduleService.GetWorkoutScheduleByUser(username);
             return Ok(response);
         }
 

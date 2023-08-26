@@ -1,29 +1,19 @@
 export const treeData = [
   {
-    path: 'user',
-    icon: 'user',
-    name: 'user',
-  },
-  {
     path: 'home',
     icon: 'home',
     name: 'home'
   },
   {
-    name: 'PR section',
-    children: [
-      {
-        name: 'pr',
-        icon: 'dumbbell',
-        path: 'pr'
-      }
-    ]
+    path: 'user',
+    icon: 'user',
+    name: 'user',
   },
   {
-    name: 'Workout Plans',
-    children: [
-      {name: 'workouts', icon: 'calendar', path: 'workouts/home'},
-      {name: 'add workout', icon: 'pen', path: 'workouts/add/-1'}
-    ]
+    name: 'Records',
+    icon: 'dumbbell',
+    path: 'pr'
   },
+  {name: 'workouts', icon: 'calendar', path: 'workouts/home'},
+  {name: 'create workout', icon: 'calendar-plus', path: 'workouts/add/-1'}
 ]
