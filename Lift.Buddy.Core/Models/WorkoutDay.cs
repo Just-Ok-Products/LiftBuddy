@@ -22,7 +22,7 @@ namespace Lift.Buddy.Core.Models
             var paragraph = section.AddParagraph();
             foreach (var exercise in Exercises)
             {
-                paragraph.AddText(exercise.ToString());
+                paragraph.AddText($"{exercise}\n");
             }
 
             return document;

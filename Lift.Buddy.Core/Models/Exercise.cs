@@ -19,11 +19,6 @@ namespace Lift.Buddy.Core.Models
         [JsonPropertyName("rest")]
         public DateTime? Rest { get; set; }
 
-        public override string ToString()
-        {
-            base.ToString();
-
-            return $"{Name}: {Repetitions}x{Series}\n";
-        }
+        public override string ToString() => $"{Name}: {Repetitions}x{Series}";
     }
 }
