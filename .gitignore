@@ -19,6 +19,7 @@ Lift.Buddy.UI/ClientApp/.c9/
 *.launch
 Lift.Buddy.UI/ClientApp/.settings/
 *.sublime-workspace
+.idea/
 
 # Visual Studio Code
 .vscode/*
