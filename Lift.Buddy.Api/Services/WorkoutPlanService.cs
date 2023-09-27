@@ -6,7 +6,7 @@ using Lift.Buddy.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
-using PdfSharp.Pdf;
+using System.Text;
 
 namespace Lift.Buddy.API.Services
 {
@@ -26,22 +26,25 @@ namespace Lift.Buddy.API.Services
 
             try
             {
+                // QUESTION: se ho capito bene, dando un ID > 0 si ritorna una lista con un solo risultato,
+                // altrimenti tutti i workout. corretto?
                 List<WorkoutPlan> workoutSchedules;
                 if (id > 0)
                 {
                     workoutSchedules = await _context.WorkoutSchedules.Where(x => x.Id == id).ToListAsync();
-                } else
+                }
+                else
                 {
                     workoutSchedules = await _context.WorkoutSchedules.ToListAsync();
                 }
 
-                response.result = true;
-                response.body = workoutSchedules;
+                response.Result = true;
+                response.Body = workoutSchedules;
             }
             catch (Exception ex)
             {
-                response.result = false;
-                response.notes = Utils.ErrorMessage(nameof(GetWorkoutPlan), ex);
+                response.Result = false;
+                response.Notes = Utils.ErrorMessage(nameof(GetWorkoutPlan), ex);
             }
 
             return response;
@@ -53,11 +56,10 @@ namespace Lift.Buddy.API.Services
 
             try
             {
-                if (username == String.Empty)
-                {
-                    throw new Exception("No username given.");
-                }
-                 
+                if (username == string.Empty) throw new Exception("No username given.");
+
+                // a naso questo potrebbe essere migliorato facendo una sola query e ristrutturando
+                // le references tra gli oggetti su db
                 var workoutAssignments = await _context.WorkoutAssignments
                     .Where(x => x.WorkoutUser == username)
                     .ToListAsync();
@@ -69,15 +71,15 @@ namespace Lift.Buddy.API.Services
                         .Where(x => x.WorkoutAssignments.Contains(workoutAssignment))
                         .ToListAsync();
 
-                    response.body = response.body.Concat(workoutSchedules).ToList();
+                    response.Body = response.Body.Concat(workoutSchedules).ToList();
                 }
 
-                response.result = true;
+                response.Result = true;
             }
             catch (Exception ex)
             {
-                response.result = false;
-                response.notes = Utils.ErrorMessage(nameof(GetWorkoutPlan), ex);
+                response.Result = false;
+                response.Notes = Utils.ErrorMessage(nameof(GetWorkoutPlan), ex);
             }
 
             return response;
@@ -89,22 +91,19 @@ namespace Lift.Buddy.API.Services
 
             try
             {
-                if (username == String.Empty)
-                {
-                    throw new Exception("No username given.");
-                }
+                if (username == string.Empty) throw new Exception("No username given.");
 
                 var workoutSchedules = await _context.WorkoutSchedules
                     .Where(x => x.CreatedBy == username)
                     .ToListAsync();
 
-                response.body = workoutSchedules;
-                response.result = true;
+                response.Body = workoutSchedules;
+                response.Result = true;
             }
             catch (Exception ex)
             {
-                response.result = false;
-                response.notes = Utils.ErrorMessage(nameof(GetWorkoutPlan), ex);
+                response.Result = false;
+                response.Notes = Utils.ErrorMessage(nameof(GetWorkoutPlan), ex);
             }
 
             return response;
@@ -113,56 +112,65 @@ namespace Lift.Buddy.API.Services
         public async Task<Response<int>> GetWorkoutPlanSubscribersNumber(int workoutPlanId)
         {
             var response = new Response<int>();
-            var subscribersCount = new List<int>();
             try
             {
-                var workoutPlanSubscribers = await _context.WorkoutAssignments.Where(x => x.WorkoutId == workoutPlanId).ToListAsync();
+                var workoutPlanSubscribers = await _context.WorkoutAssignments
+                    .Where(x => x.WorkoutId == workoutPlanId)
+                    .ToListAsync();
 
-                response.result = true;
-                subscribersCount.Add(workoutPlanSubscribers.Count);
-                response.body = subscribersCount;
+                response.Result = true;
+                response.Body = new List<int>
+                {
+                    workoutPlanSubscribers.Count
+                };
             }
             catch (Exception ex)
             {
-                response.result = false;
-                response.notes = Utils.ErrorMessage(nameof(GetWorkoutPlanSubscribersNumber), ex);
+                response.Result = false;
+                response.Notes = Utils.ErrorMessage(nameof(GetWorkoutPlanSubscribersNumber), ex);
             }
             return response;
         }
 
-        public async Task<Response<Document>> GetWorkplanPdf(int workplanId)
+        public async Task<Response<Document>> GetWorkoutPlanPdf(int workplanId)
         {
             var response = new Response<Document>();
 
             try
             {
-                var workoutPlan = _context.WorkoutSchedules.Where(x => x.Id == workplanId).FirstOrDefault();
+                // async
+                var workoutPlan = _context.WorkoutSchedules
+                    .Where(x => x.Id == workplanId)
+                    .FirstOrDefault();
 
-                if (workoutPlan == null)
-                {
-                    throw new Exception("There workplan does not exist in the database.");
-                }
+                if (workoutPlan == null) throw new Exception("The workplan does not exist in the database.");
 
-                var doc = workoutPlan.WorkoutDays[0].GetPDF();
+                var doc = workoutPlan.WorkoutDays[0].ToPDF();
                 doc.UseCmykColor = true;
-                PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(false);
-                pdfRenderer.Document = doc;
 
-                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+                PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(false)
+                {
+                    Document = doc
+                };
+
+                // corretto qua o dovrebbe essere registrato con il resto dei servizi?
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
                 pdfRenderer.RenderDocument();
 
+                //TODO: userei un servizio che si occupa di creare il pdf e nominarlo, o al limite spostare
+                // il nome tra i campi di questa classe                
                 const string filename = "HelloWorld.pdf";
                 pdfRenderer.PdfDocument.Save(filename);
             }
             catch (Exception ex)
             {
-                response.result = false;
-                response.notes = Utils.ErrorMessage(nameof(GetWorkplanPdf), ex);
+                response.Result = false;
+                response.Notes = Utils.ErrorMessage(nameof(GetWorkoutPlanPdf), ex);
             }
 
             return response;
-        } 
+        }
         #endregion
 
         #region Add
@@ -178,13 +186,14 @@ namespace Lift.Buddy.API.Services
                 {
                     throw new Exception("Failed to save changes in database");
                 }
-                response.result = true;
-                response.body = new List<WorkoutPlan> { schedule };
+
+                response.Result = true;
+                response.Body = new List<WorkoutPlan> { schedule };
             }
             catch (Exception ex)
             {
-                response.result = false;
-                response.notes = Utils.ErrorMessage(nameof(AddWorkoutPlan), ex);
+                response.Result = false;
+                response.Notes = Utils.ErrorMessage(nameof(AddWorkoutPlan), ex);
             }
 
             return response;
@@ -205,13 +214,13 @@ namespace Lift.Buddy.API.Services
                     throw new Exception("Failed to save changes in database");
                 }
 
-                response.result = true;
-                response.body = new List<WorkoutPlan> { schedule };
+                response.Result = true;
+                response.Body = new List<WorkoutPlan> { schedule };
             }
             catch (Exception ex)
             {
-                response.result = false;
-                response.notes = Utils.ErrorMessage(nameof(DeleteWorkoutPlan), ex);
+                response.Result = false;
+                response.Notes = Utils.ErrorMessage(nameof(DeleteWorkoutPlan), ex);
             }
 
             return response;
@@ -232,13 +241,13 @@ namespace Lift.Buddy.API.Services
                     throw new Exception("Failed to save changes in database");
                 }
 
-                response.result = true;
-                response.body = new List<WorkoutPlan> { schedule };
+                response.Result = true;
+                response.Body = new List<WorkoutPlan> { schedule };
             }
             catch (Exception ex)
             {
-                response.result = false;
-                response.notes = Utils.ErrorMessage(nameof(UpdateWorkoutPlan), ex);
+                response.Result = false;
+                response.Notes = Utils.ErrorMessage(nameof(UpdateWorkoutPlan), ex);
             }
 
             return response;
@@ -250,20 +259,15 @@ namespace Lift.Buddy.API.Services
 
             try
             {
-                if (schedule == null)
-                {
-                    throw new Exception("Cannot review with empty data.");
-                }
+                if (schedule == null) throw new Exception("Cannot review with empty data.");
 
-                var oldSchedule = await _context.WorkoutSchedules.FirstOrDefaultAsync(x => x.Id == schedule.Id);
+                var oldSchedule = await _context.WorkoutSchedules
+                    .FirstOrDefaultAsync(x => x.Id == schedule.Id);
 
-                if (oldSchedule == null)
-                {
-                    throw new Exception($"Trying to review non existing workout plan with id {schedule.Id}.");
-                }
+                if (oldSchedule == null) throw new Exception($"Trying to review non existing workout plan with id {schedule.Id}.");
 
-                oldSchedule.ReviewAverage = (schedule.ReviewAverage + (oldSchedule.ReviewAverage * oldSchedule.ReviewersAmount)) / (oldSchedule.ReviewersAmount + 1);
-                oldSchedule.ReviewersAmount++;
+                oldSchedule.ReviewAverage = (schedule.ReviewAverage + (oldSchedule.ReviewAverage * oldSchedule.ReviewsAmount)) / (oldSchedule.ReviewsAmount + 1);
+                oldSchedule.ReviewsAmount++;
 
                 _context.WorkoutSchedules.Update(oldSchedule);
 
@@ -272,13 +276,13 @@ namespace Lift.Buddy.API.Services
                     throw new Exception("Failed to save changes in database");
                 }
 
-                response.result = true;
-                response.body = new List<WorkoutPlan> { schedule };
+                response.Result = true;
+                response.Body = new List<WorkoutPlan> { schedule };
             }
             catch (Exception ex)
             {
-                response.result = false;
-                response.notes = Utils.ErrorMessage(nameof(UpdateWorkoutPlan), ex);
+                response.Result = false;
+                response.Notes = Utils.ErrorMessage(nameof(UpdateWorkoutPlan), ex);
             }
 
             return response;

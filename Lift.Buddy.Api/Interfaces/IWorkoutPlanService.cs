@@ -10,8 +10,10 @@ namespace Lift.Buddy.API.Interfaces
         Task<Response<WorkoutPlan>> GetWorkoutPlanCreatedByUsername(string username);
         Task<Response<WorkoutPlan>> GetWorkoutPlanAssignedToUsername(string username);
         Task<Response<int>> GetWorkoutPlanSubscribersNumber(int workoutPlanId);
-        Task<Response<Document>> GetWorkplanPdf(int workoutPlanId);
+        Task<Response<Document>> GetWorkoutPlanPdf(int workoutPlanId);
         Task<Response<WorkoutPlan>> AddWorkoutPlan(WorkoutPlan schedule);
+
+        //QUESTION: perchè non passare solo l'id come per Get?
         Task<Response<WorkoutPlan>> DeleteWorkoutPlan(WorkoutPlan schedule);
         Task<Response<WorkoutPlan>> UpdateWorkoutPlan(WorkoutPlan schedule);
         Task<Response<WorkoutPlan>> ReviewWorkoutPlan(WorkoutPlan schedule);

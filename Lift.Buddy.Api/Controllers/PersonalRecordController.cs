@@ -9,33 +9,34 @@ namespace Lift.Buddy.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class PRController : ControllerBase
+    public class PersonalRecordController : ControllerBase
     {
-        private readonly IPRService _prService;
-        public PRController(IPRService prSservice) 
+        private readonly IPersonalRecordService _recordService;
+
+        public PersonalRecordController(IPersonalRecordService prSservice)
         {
-            _prService = prSservice;
+            _recordService = prSservice;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
             var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
-            var response = await _prService.GetByUser(username);
+            var response = await _recordService.GetByUser(username);
             return Ok(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] UserPR userPR)
+        public async Task<IActionResult> Add([FromBody] UserPersonalRecord userRecord)
         {
-            var response = await _prService.AddPR(userPR);
+            var response = await _recordService.AddPersonalRecord(userRecord);
             return Ok(response);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UserPR userPR)
+        public async Task<IActionResult> Update([FromBody] UserPersonalRecord userRecord)
         {
-            var response = await _prService.UpdatePR(userPR);
+            var response = await _recordService.UpdatePersonalRecord(userRecord);
             return Ok(response);
         }
     }

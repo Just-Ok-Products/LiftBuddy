@@ -22,7 +22,7 @@ namespace Lift.Buddy.Core
             }
         }
 
-        public static string ErrorMessage(string function , Exception ex)
+        public static string ErrorMessage(string function, Exception ex)
         {
             return $"{function} execution failed. Ex: {ex.Message}. InnerEx: {ex.InnerException?.Message ?? "-"}";
         }

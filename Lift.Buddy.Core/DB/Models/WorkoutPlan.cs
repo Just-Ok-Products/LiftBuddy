@@ -8,6 +8,7 @@ namespace Lift.Buddy.Core.DB.Models
 {
     public class WorkoutPlan
     {
+        //QUESTION: non sarebbe meglio usare un guid per gli id?
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [JsonPropertyName("id")]
@@ -26,13 +27,14 @@ namespace Lift.Buddy.Core.DB.Models
         public int ReviewAverage { get; set; } = 0;
 
         [JsonIgnore]
-        public int ReviewersAmount { get; set; } = 0;
+        public int ReviewsAmount { get; set; } = 0;
 
+        //QUESTION: differenza tra CreatedBy e info in Creator?
         [JsonIgnore]
         public virtual User? Creator { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<WorkoutAssignment>? WorkoutAssignments { get; set; }
-        
+
     }
 }

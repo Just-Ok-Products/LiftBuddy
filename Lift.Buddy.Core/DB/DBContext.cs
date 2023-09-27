@@ -11,9 +11,9 @@ namespace Lift.Buddy.Core.DB
         public DbSet<User> Users { get; set; }
         public DbSet<WorkoutPlan> WorkoutSchedules { get; set; }
         public DbSet<WorkoutAssignment> WorkoutAssignments { get; set; }
-        public DbSet<UserPR> UserPRs { get; set; }
+        public DbSet<UserPersonalRecord> UserPRs { get; set; }
 
-        public DBContext(DbContextOptions<DBContext> options): base(options)
+        public DBContext(DbContextOptions<DBContext> options) : base(options)
         {
         }
 
@@ -50,7 +50,7 @@ namespace Lift.Buddy.Core.DB
                 entity.Property<string>(e => e.Name)
                     .IsRequired();
 
-                entity.Property<int>(e => e.ReviewersAmount)
+                entity.Property<int>(e => e.ReviewsAmount)
                     .HasDefaultValue(0);
 
                 entity.Property<int>(e => e.ReviewAverage)
@@ -81,15 +81,15 @@ namespace Lift.Buddy.Core.DB
                 .HasForeignKey(e => e.WorkoutUser)
                 .HasPrincipalKey(e => e.UserName);
 
-            modelBuilder.Entity<UserPR>(entity =>
+            modelBuilder.Entity<UserPersonalRecord>(entity =>
             {
                 entity.HasKey(e => e.Username);
                 entity.Property(e => e.PersonalRecords)
                     .HasConversion<string>(exercises => PRToString(exercises), dbExercises => StringToPR(dbExercises));
 
                 entity.HasOne(e => e.User)
-                .WithOne(e => e.UserPR)
-                .HasForeignKey<UserPR>(e => e.Username)
+                .WithOne(e => e.UserPersonalRecord)
+                .HasForeignKey<UserPersonalRecord>(e => e.Username)
                 .HasPrincipalKey<User>(e => e.UserName);
             });
 
@@ -109,6 +109,10 @@ namespace Lift.Buddy.Core.DB
             });
         }
 
+        //TODO: non terrei i metodi direttamente nel context ma esporrei una classe che si occupa
+        // di fare le operazioni (generalmente è chiamata Repository, es: UserRepository). 
+        // In caso meto qualche esempio. Serve per non passare direttamente in giro il db context
+        // con le property pubbliche.
         #region Methods
 
         #region Trainer conversion

@@ -8,12 +8,14 @@ namespace Lift.Buddy.Core.DB.Models
     {
         [Key]
         public int WorkoutId { get; set; } = -1;
+
         [Key]
         public string WorkoutUser { get; set; } = "";
 
         [JsonIgnore, ForeignKey(nameof(WorkoutUser))]
         public virtual User User { get; set; }
+
         [JsonIgnore, ForeignKey(nameof(WorkoutId))]
-        public virtual WorkoutPlan WorkoutSchedule { get; set;}
+        public virtual WorkoutPlan WorkoutSchedule { get; set; }
     }
 }

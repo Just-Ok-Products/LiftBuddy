@@ -9,7 +9,6 @@ namespace Lift.Buddy.API.Interfaces
         Task<Response<SecurityQuestions>> GetSecurityQuestions(string username);
         bool CheckCredentials(LoginCredentials credentials);
         Task<Response<RegistrationCredentials>> RegisterUser(RegistrationCredentials registerCredentials);
-
         Task<Response<LoginCredentials>> ChangePassword(LoginCredentials loginCredentials);
     }
 }

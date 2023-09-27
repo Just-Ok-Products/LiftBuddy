@@ -1,7 +1,6 @@
 ﻿using Lift.Buddy.API.Interfaces;
 using Lift.Buddy.Core.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,6 +9,7 @@ using System.Text;
 
 namespace Lift.Buddy.API.Controllers
 {
+    //TODO: per convenzione si dovrebbero usare _ invece che - negli endpoint
     [Route("api/[controller]")]
     [ApiController]
     public class LoginController : ControllerBase
@@ -33,6 +33,8 @@ namespace Lift.Buddy.API.Controllers
             return Ok(response);
         }
 
+        //QUESTION: non dovrebbe tornare ok anche qeusta? cosa succede se le richieste falliscono?
+        // (tipo se il db è momentaneamente irraggiungibile?). immagino che il backend esploda
         [HttpPut("user-data")]
         [Authorize]
         public async Task<IActionResult> UpdateUserData([FromBody] UserData userData)
@@ -43,14 +45,15 @@ namespace Lift.Buddy.API.Controllers
         #endregion
 
         [HttpPost("security-questions")]
-        public async Task< IActionResult> GetSecurityQuestions([FromBody] LoginCredentials loginCredentials)
+        public async Task<IActionResult> GetSecurityQuestions([FromBody] LoginCredentials loginCredentials)
         {
             var response = await _loginService.GetSecurityQuestions(loginCredentials.Username);
             return Ok(response);
         }
 
         [HttpPost]
-        public IActionResult Login([FromBody] LoginCredentials loginCredentials) {
+        public IActionResult Login([FromBody] LoginCredentials loginCredentials)
+        {
             if (loginCredentials == null || !_loginService.CheckCredentials(loginCredentials))
             {
                 return Unauthorized();
@@ -58,8 +61,10 @@ namespace Lift.Buddy.API.Controllers
             var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["Authentication:SecretForKey"] ?? ""));
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var claimsForToken = new List<Claim>();
-            claimsForToken.Add(new Claim("sub", loginCredentials.Username));
+            var claimsForToken = new List<Claim>
+            {
+                new Claim("sub", loginCredentials.Username)
+            };
 
             var jwtSecurityToken = new JwtSecurityToken(
                 _configuration["Authentication:Issuer"],
@@ -72,21 +77,27 @@ namespace Lift.Buddy.API.Controllers
 
             var tokenToReturn = new JwtSecurityTokenHandler()
                 .WriteToken(jwtSecurityToken);
-            var tokens = new List<string>();
-            tokens.Add(tokenToReturn);
+
+            // qua userei un array e IEnumerable in Response.Body
+            var tokens = new List<string>
+            {
+                tokenToReturn
+            };
+
             var loginResp = new Response<string>
             {
-                result = true,
-                body = tokens,
-                notes = ""
+                Result = true,
+                Body = tokens,
+                Notes = ""
             };
             return Ok(loginResp);
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegistrationCredentials registrationCredentials) {
+        public async Task<IActionResult> Register([FromBody] RegistrationCredentials registrationCredentials)
+        {
             var response = await _loginService.RegisterUser(registrationCredentials);
-            if (!response.result)
+            if (!response.Result)
             {
                 return Ok(response);
             }
@@ -98,7 +109,7 @@ namespace Lift.Buddy.API.Controllers
         {
             var response = await _loginService.ChangePassword(loginCredentials);
 
-            if (!response.result)
+            if (!response.Result)
             {
                 return Ok(response);
             }

@@ -14,19 +14,14 @@ try
 
     var app = builder.Build();
 
-    var dataContext = app.Services.GetService<DBContext>() ?? null;
-
-    if (dataContext == null)
-    {
-        throw new Exception("Null datacontext");
-    }
-
+    // var dataContext = app.Services.GetService<DBContext>();
+    // if (dataContext == null) throw new NullReferenceException("Null datacontext");
     // dataContext.Database.Migrate();
 
     app.Run();
 }
-catch (Exception ex)
+catch (Exception)
 {
-
+    throw;
 }
 

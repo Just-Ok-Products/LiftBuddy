@@ -3,7 +3,6 @@ using Lift.Buddy.Core;
 using Lift.Buddy.Core.DB;
 using Lift.Buddy.Core.DB.Models;
 using Lift.Buddy.Core.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
@@ -11,11 +10,10 @@ namespace Lift.Buddy.API.Services
 {
     public class LoginService : ILoginService
     {
+        // Repository al posto di DBContext
         private readonly DBContext _context;
 
-        public LoginService(
-            DBContext context    
-        )
+        public LoginService(DBContext context)
         {
             _context = context;
         }
@@ -26,24 +24,29 @@ namespace Lift.Buddy.API.Services
             var securityQuestions = new List<SecurityQuestions>();
             try
             {
-                var user = (await _context.Users.Where(x => x.UserName == username).ToListAsync()).FirstOrDefault();
-                if (user == null)
-                {
-                    throw new Exception("User doesn't exist");
-                }
+                var user = (await _context.Users.Where(x => x.UserName == username).ToListAsync())
+                    .FirstOrDefault();
 
-                var securityQuestion = new SecurityQuestions();
-                securityQuestion.Answers = user.Answers.Split(",").ToList();
-                securityQuestion.Questions = user.Questions.Split(",").ToList();
+                if (user == null) throw new Exception("User doesn't exist");
+
+                var securityQuestion = new SecurityQuestions
+                {
+                    Answers = user.Answers.Split(",").ToList(),
+                    Questions = user.Questions.Split(",").ToList()
+                };
                 securityQuestions.Add(securityQuestion);
-                response.result = true;
-                response.body = securityQuestions;
+                response.Result = true;
+                response.Body = securityQuestions;
             }
             catch (Exception ex)
             {
-                response.result = false;
-                response.notes = Utils.ErrorMessage(nameof(GetSecurityQuestions), ex);
+                // QUESTION: perchè ritornare all'utente il nome di funzione e metodo? 
+                // dovrebbe essere roba solo visibile nei log del backend
+                response.Result = false;
+                response.Notes = Utils.ErrorMessage(nameof(GetSecurityQuestions), ex);
             }
+
+            // non usato
             var t = JsonSerializer.Serialize(response);
             return response;
         }
@@ -52,13 +55,16 @@ namespace Lift.Buddy.API.Services
         {
             var username = credentials.Username;
             var password = credentials.Password;
+            // QUESTION: non dovrebbe essere anche qua async?
             var user = _context.Users.Where(x => x.UserName == username).ToList().FirstOrDefault();
-            if ( user == null || password == null)
+
+            if (user == null || password == null) // metodo in LoginCredentials, o evitare null
             {
                 return false;
             }
-            var hashedPwd = Utils.HashString(password);
-            if ( hashedPwd != user.Password ) 
+
+            var hashedPwd = Utils.HashString(password); // userei un servizio separato che si occupa solo di hash e fare il controllo
+            if (hashedPwd != user.Password)
             {
                 return false;
             }
@@ -72,22 +78,25 @@ namespace Lift.Buddy.API.Services
 
             try
             {
-                var user = new User();
-                user.UserName = credentials.Username;
-                user.Name = credentials.Name;
-                user.Surname = credentials.Surname;
-                user.Email = credentials.Email;
-                user.Password = Utils.HashString(credentials.Password);
-                user.Questions = String.Join(",", credentials.Questions);
-                user.Answers = String.Join(",", credentials.Answers);
+                var user = new User
+                {
+                    UserName = credentials.Username,
+                    Name = credentials.Name,
+                    Surname = credentials.Surname,
+                    Email = credentials.Email,
+                    Password = Utils.HashString(credentials.Password),
+                    Questions = string.Join(",", credentials.Questions),
+                    Answers = string.Join(",", credentials.Answers)
+                };
+
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
-                response.result = true;
+                response.Result = true;
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
-                response.result = false;
-                response.notes = Utils.ErrorMessage(nameof(RegisterUser), ex);
+                response.Result = false;
+                response.Notes = Utils.ErrorMessage(nameof(RegisterUser), ex);
             }
 
             return response;
@@ -100,27 +109,27 @@ namespace Lift.Buddy.API.Services
             {
                 var user = (await _context.Users.Where(x => x.UserName == loginCredentials.Username).ToListAsync()).FirstOrDefault();
 
-                if (user == null)
-                {
-                    throw new Exception("The user doens't exist in the database");
-                }
-                if (loginCredentials.Password == null)
-                {
-                    throw new Exception("Trying to change password to null");
-                }
+                if (user == null) throw new Exception("The user doens't exist in the database");
+
+                //QUESTION: qua vengono lanciate eccezioni ed in CheckCredentials si ritorna un Result.False.
+                //Sarebbe da unificare
+                if (loginCredentials.Password == null) throw new Exception("Trying to change password to null");
+
                 user.Password = Utils.HashString(loginCredentials.Password);
                 _context.Users.Update(user);
+
+                // in RegisterUser non viene fatto questo check
                 if ((await _context.SaveChangesAsync()) == 0)
                 {
                     throw new Exception("No changes on database");
                 }
 
-                response.result = true;
+                response.Result = true;
             }
             catch (Exception ex)
             {
-                response.result = false;
-                response.notes = Utils.ErrorMessage(nameof(ChangePassword), ex);
+                response.Result = false;
+                response.Notes = Utils.ErrorMessage(nameof(ChangePassword), ex);
             }
 
             return response;
@@ -136,23 +145,22 @@ namespace Lift.Buddy.API.Services
             {
                 var user = (await _context.Users.Where(x => x.UserName == username).ToListAsync()).FirstOrDefault();
 
-                if (user == null)
-                {
-                    throw new Exception($"No user was found with username {username}.");
-                }
+                if (user == null) throw new Exception($"No user was found with username {username}.");
+
+                //TODO: mapper da User (entità) a UserData (model)
                 userData.Username = user.UserName ?? "";
                 userData.Name = user.Name ?? "";
                 userData.Surname = user.Surname ?? "";
                 userData.Email = user.Email ?? "";
 
-                response.body.Add(userData);
-                response.result = true;
+                response.Body.Add(userData);
+                response.Result = true;
 
             }
             catch (Exception ex)
             {
-                response.result = false;
-                response.notes = Utils.ErrorMessage(nameof(GetUserData), ex);
+                response.Result = false;
+                response.Notes = Utils.ErrorMessage(nameof(GetUserData), ex);
             }
 
             return response;
@@ -182,12 +190,12 @@ namespace Lift.Buddy.API.Services
                     throw new Exception($"Failed to update database.");
                 }
 
-                response.result = true;
+                response.Result = true;
             }
             catch (Exception ex)
             {
-                response.result = false;
-                response.notes = Utils.ErrorMessage(nameof(UpdateUserData), ex);
+                response.Result = false;
+                response.Notes = Utils.ErrorMessage(nameof(UpdateUserData), ex);
             }
 
             return response;

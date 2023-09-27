@@ -1,8 +1,5 @@
 ﻿using Lift.Buddy.API.Interfaces;
 using Lift.Buddy.Core.DB.Models;
-using Lift.Buddy.Core.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -22,17 +19,13 @@ namespace Lift.Buddy.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? String.Empty;
-            Response<WorkoutPlan> response;
-            if (String.IsNullOrEmpty(username))
-            {
-                response = await _workoutScheduleService.GetWorkoutPlan(-1);
-            }
-            else
-            {
-                response = await _workoutScheduleService.GetWorkoutPlanAssignedToUsername(username);
-            }
-            return Ok(response);
+            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var res = string.IsNullOrEmpty(username)
+                ? await _workoutScheduleService.GetWorkoutPlan(-1)
+                : await _workoutScheduleService.GetWorkoutPlanAssignedToUsername(username);
+
+            return Ok(res);
         }
 
         [HttpGet("CreatedBy/{username}")]
@@ -52,7 +45,7 @@ namespace Lift.Buddy.API.Controllers
         [HttpGet("pdf/{id}")]
         public async Task<IActionResult> GetWorkplanPdf(int id)
         {
-            var response = await _workoutScheduleService.GetWorkplanPdf(id);
+            var response = await _workoutScheduleService.GetWorkoutPlanPdf(id);
             return Ok(response);
         }
 
@@ -68,7 +61,7 @@ namespace Lift.Buddy.API.Controllers
         public async Task<IActionResult> Add([FromBody] WorkoutPlan workoutSchedule)
         {
             var response = await _workoutScheduleService.AddWorkoutPlan(workoutSchedule);
-            if (!response.result)
+            if (!response.Result)
             {
                 return Ok(response);
             }
@@ -79,7 +72,7 @@ namespace Lift.Buddy.API.Controllers
         public async Task<IActionResult> ReviewWorkouPlan([FromBody] WorkoutPlan workoutPlan)
         {
             var response = await _workoutScheduleService.ReviewWorkoutPlan(workoutPlan);
-            if (!response.result)
+            if (!response.Result)
             {
                 return Ok(response);
             }
@@ -90,7 +83,7 @@ namespace Lift.Buddy.API.Controllers
         public async Task<IActionResult> Update([FromBody] WorkoutPlan workoutSchedule)
         {
             var response = await _workoutScheduleService.UpdateWorkoutPlan(workoutSchedule);
-            if (!response.result)
+            if (!response.Result)
             {
                 return Ok(response);
             }
@@ -101,7 +94,7 @@ namespace Lift.Buddy.API.Controllers
         public async Task<IActionResult> Delete([FromBody] WorkoutPlan workoutSchedule)
         {
             var response = await _workoutScheduleService.DeleteWorkoutPlan(workoutSchedule);
-            if (!response.result)
+            if (!response.Result)
             {
                 return Ok(response);
             }

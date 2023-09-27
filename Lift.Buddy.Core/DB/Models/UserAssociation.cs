@@ -13,6 +13,7 @@ namespace Lift.Buddy.Core.DB.Models
 
         [ForeignKey(nameof(TrainerUsername)), IgnoreDataMember]
         public virtual User Trainer { get; set; }
+
         [ForeignKey(nameof(AthleteUsername)), IgnoreDataMember]
         public virtual User Athlete { get; set; }
 

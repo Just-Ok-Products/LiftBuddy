@@ -24,6 +24,7 @@ builder.Services.AddSwaggerGen(setupAction =>
         BearerFormat = "JWT",
         Description = "Input a valid token to access this API"
     });
+
     setupAction.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -71,7 +72,7 @@ builder.Services.AddAuthentication("Bearer")
 
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IWorkoutPlanService, WorkoutPlanService>();
-builder.Services.AddScoped<IPRService, PRService>();
+builder.Services.AddScoped<IPersonalRecordService, PersonalRecordService>();
 
 builder.Services.AddDbContext<DBContext>(options =>
 {
