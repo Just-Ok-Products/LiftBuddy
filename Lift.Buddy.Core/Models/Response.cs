@@ -12,7 +12,6 @@ namespace Lift.Buddy.Core.Models
         [JsonPropertyName("notes")]
         public string? Notes { get; set; }
 
-        // QUESTION: penso di non aver capito lo scopo del campo
         [JsonPropertyName("result")]
         public bool Result { get; set; }
 

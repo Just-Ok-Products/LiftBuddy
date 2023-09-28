@@ -1,4 +1,4 @@
-﻿using Lift.Buddy.Core.DB.Models;
+﻿using Lift.Buddy.Core.Database.Entities;
 using Lift.Buddy.Core.Models;
 using MigraDoc.DocumentObjectModel;
 

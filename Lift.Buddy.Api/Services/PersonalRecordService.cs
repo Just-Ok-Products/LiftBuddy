@@ -1,7 +1,7 @@
 ﻿using Lift.Buddy.API.Interfaces;
 using Lift.Buddy.Core;
-using Lift.Buddy.Core.DB;
-using Lift.Buddy.Core.DB.Models;
+using Lift.Buddy.Core.Database;
+using Lift.Buddy.Core.Database.Entities;
 using Lift.Buddy.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,9 +9,9 @@ namespace Lift.Buddy.API.Services
 {
     public class PersonalRecordService : IPersonalRecordService
     {
-        private readonly DBContext _context;
+        private readonly LiftBuddyContext _context;
 
-        public PersonalRecordService(DBContext context)
+        public PersonalRecordService(LiftBuddyContext context)
         {
             _context = context;
         }
@@ -46,7 +46,7 @@ namespace Lift.Buddy.API.Services
             {
                 if (userPR == null) throw new Exception("No data received");
 
-                _context.UserPRs.Add(userPR);
+                await _context.UserPRs.AddAsync(userPR);
 
                 if ((await _context.SaveChangesAsync()) < 1)
                 {

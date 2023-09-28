@@ -1,13 +1,11 @@
-﻿using Lift.Buddy.Core.DB;
-using Microsoft.Data.Sqlite;
+﻿using Lift.Buddy.Core.Database;
 using Microsoft.EntityFrameworkCore;
-using System.Text;
 
 try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.Services.AddDbContext<DBContext>(options =>
+    builder.Services.AddDbContext<LiftBuddyContext>(options =>
     {
         options.UseSqlite(builder.Configuration.GetConnectionString("TestDatabase"));
     });

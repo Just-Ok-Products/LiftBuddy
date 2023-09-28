@@ -1,7 +1,7 @@
 ﻿using Lift.Buddy.API.Interfaces;
 using Lift.Buddy.Core;
-using Lift.Buddy.Core.DB;
-using Lift.Buddy.Core.DB.Models;
+using Lift.Buddy.Core.Database;
+using Lift.Buddy.Core.Database.Entities;
 using Lift.Buddy.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using MigraDoc.DocumentObjectModel;
@@ -12,15 +12,16 @@ namespace Lift.Buddy.API.Services
 {
     public class WorkoutPlanService : IWorkoutPlanService
     {
-        private readonly DBContext _context;
+        private readonly LiftBuddyContext _context;
 
-        public WorkoutPlanService(DBContext context)
+        public WorkoutPlanService(LiftBuddyContext context)
         {
             _context = context;
         }
 
         #region Get
-        public async Task<Response<WorkoutPlan>> GetWorkoutPlan(int id)
+
+        public async Task<Response<WorkoutPlan>> GetWorkoutPlanById(int id)
         {
             var response = new Response<WorkoutPlan>();
 
@@ -31,11 +32,11 @@ namespace Lift.Buddy.API.Services
                 List<WorkoutPlan> workoutSchedules;
                 if (id > 0)
                 {
-                    workoutSchedules = await _context.WorkoutSchedules.Where(x => x.Id == id).ToListAsync();
+                    workoutSchedules = await _context.WorkoutPlans.Where(x => x.Id == id).ToListAsync();
                 }
                 else
                 {
-                    workoutSchedules = await _context.WorkoutSchedules.ToListAsync();
+                    workoutSchedules = await _context.WorkoutPlans.ToListAsync();
                 }
 
                 response.Result = true;
@@ -67,7 +68,7 @@ namespace Lift.Buddy.API.Services
                 List<WorkoutPlan> workoutSchedules;
                 foreach (var workoutAssignment in workoutAssignments)
                 {
-                    workoutSchedules = await _context.WorkoutSchedules
+                    workoutSchedules = await _context.WorkoutPlans
                         .Where(x => x.WorkoutAssignments.Contains(workoutAssignment))
                         .ToListAsync();
 
@@ -93,7 +94,7 @@ namespace Lift.Buddy.API.Services
             {
                 if (username == string.Empty) throw new Exception("No username given.");
 
-                var workoutSchedules = await _context.WorkoutSchedules
+                var workoutSchedules = await _context.WorkoutPlans
                     .Where(x => x.CreatedBy == username)
                     .ToListAsync();
 
@@ -138,10 +139,9 @@ namespace Lift.Buddy.API.Services
 
             try
             {
-                // async
-                var workoutPlan = _context.WorkoutSchedules
+                var workoutPlan = await _context.WorkoutPlans
                     .Where(x => x.Id == workplanId)
-                    .FirstOrDefault();
+                    .FirstOrDefaultAsync();
 
                 if (workoutPlan == null) throw new Exception("The workplan does not exist in the database.");
 
@@ -158,8 +158,6 @@ namespace Lift.Buddy.API.Services
 
                 pdfRenderer.RenderDocument();
 
-                //TODO: userei un servizio che si occupa di creare il pdf e nominarlo, o al limite spostare
-                // il nome tra i campi di questa classe                
                 const string filename = "HelloWorld.pdf";
                 pdfRenderer.PdfDocument.Save(filename);
             }
@@ -180,7 +178,7 @@ namespace Lift.Buddy.API.Services
 
             try
             {
-                _context.WorkoutSchedules.Add(schedule);
+                _context.WorkoutPlans.Add(schedule);
 
                 if ((await _context.SaveChangesAsync()) < 1)
                 {
@@ -207,7 +205,7 @@ namespace Lift.Buddy.API.Services
 
             try
             {
-                _context.WorkoutSchedules.Remove(schedule);
+                _context.WorkoutPlans.Remove(schedule);
 
                 if ((await _context.SaveChangesAsync()) < 1)
                 {
@@ -234,7 +232,7 @@ namespace Lift.Buddy.API.Services
 
             try
             {
-                _context.WorkoutSchedules.Update(schedule);
+                _context.WorkoutPlans.Update(schedule);
 
                 if ((await _context.SaveChangesAsync()) < 1)
                 {
@@ -261,15 +259,15 @@ namespace Lift.Buddy.API.Services
             {
                 if (schedule == null) throw new Exception("Cannot review with empty data.");
 
-                var oldSchedule = await _context.WorkoutSchedules
+                var oldSchedule = await _context.WorkoutPlans
                     .FirstOrDefaultAsync(x => x.Id == schedule.Id);
 
                 if (oldSchedule == null) throw new Exception($"Trying to review non existing workout plan with id {schedule.Id}.");
 
-                oldSchedule.ReviewAverage = (schedule.ReviewAverage + (oldSchedule.ReviewAverage * oldSchedule.ReviewsAmount)) / (oldSchedule.ReviewsAmount + 1);
-                oldSchedule.ReviewsAmount++;
+                oldSchedule.ReviewAverage = (schedule.ReviewAverage + (oldSchedule.ReviewAverage * oldSchedule.ReviewsStars)) / (oldSchedule.ReviewsStars + 1);
+                oldSchedule.ReviewsStars++;
 
-                _context.WorkoutSchedules.Update(oldSchedule);
+                _context.WorkoutPlans.Update(oldSchedule);
 
                 if ((await _context.SaveChangesAsync()) < 1)
                 {

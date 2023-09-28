@@ -1,5 +1,5 @@
 ﻿using Lift.Buddy.API.Interfaces;
-using Lift.Buddy.Core.DB.Models;
+using Lift.Buddy.Core.Database.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;

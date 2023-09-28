@@ -1,7 +1,7 @@
 ﻿using Lift.Buddy.API.Interfaces;
 using Lift.Buddy.Core;
-using Lift.Buddy.Core.DB;
-using Lift.Buddy.Core.DB.Models;
+using Lift.Buddy.Core.Database;
+using Lift.Buddy.Core.Database.Entities;
 using Lift.Buddy.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
@@ -10,10 +10,9 @@ namespace Lift.Buddy.API.Services
 {
     public class LoginService : ILoginService
     {
-        // Repository al posto di DBContext
-        private readonly DBContext _context;
+        private readonly LiftBuddyContext _context;
 
-        public LoginService(DBContext context)
+        public LoginService(LiftBuddyContext context)
         {
             _context = context;
         }
@@ -90,7 +89,11 @@ namespace Lift.Buddy.API.Services
                 };
 
                 _context.Users.Add(user);
-                await _context.SaveChangesAsync();
+                if ((await _context.SaveChangesAsync()) == 0)
+                {
+                    throw new Exception("No changes on database");
+                }
+
                 response.Result = true;
             }
             catch (Exception ex)
@@ -111,14 +114,11 @@ namespace Lift.Buddy.API.Services
 
                 if (user == null) throw new Exception("The user doens't exist in the database");
 
-                //QUESTION: qua vengono lanciate eccezioni ed in CheckCredentials si ritorna un Result.False.
-                //Sarebbe da unificare
                 if (loginCredentials.Password == null) throw new Exception("Trying to change password to null");
 
                 user.Password = Utils.HashString(loginCredentials.Password);
                 _context.Users.Update(user);
 
-                // in RegisterUser non viene fatto questo check
                 if ((await _context.SaveChangesAsync()) == 0)
                 {
                     throw new Exception("No changes on database");

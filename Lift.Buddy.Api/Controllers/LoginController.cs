@@ -9,7 +9,6 @@ using System.Text;
 
 namespace Lift.Buddy.API.Controllers
 {
-    //TODO: per convenzione si dovrebbero usare _ invece che - negli endpoint
     [Route("api/[controller]")]
     [ApiController]
     public class LoginController : ControllerBase
@@ -33,8 +32,6 @@ namespace Lift.Buddy.API.Controllers
             return Ok(response);
         }
 
-        //QUESTION: non dovrebbe tornare ok anche qeusta? cosa succede se le richieste falliscono?
-        // (tipo se il db è momentaneamente irraggiungibile?). immagino che il backend esploda
         [HttpPut("user-data")]
         [Authorize]
         public async Task<IActionResult> UpdateUserData([FromBody] UserData userData)
@@ -78,19 +75,19 @@ namespace Lift.Buddy.API.Controllers
             var tokenToReturn = new JwtSecurityTokenHandler()
                 .WriteToken(jwtSecurityToken);
 
-            // qua userei un array e IEnumerable in Response.Body
             var tokens = new List<string>
             {
                 tokenToReturn
             };
 
-            var loginResp = new Response<string>
+            var res = new Response<string>
             {
                 Result = true,
                 Body = tokens,
                 Notes = ""
             };
-            return Ok(loginResp);
+
+            return Ok(res);
         }
 
         [HttpPost("register")]

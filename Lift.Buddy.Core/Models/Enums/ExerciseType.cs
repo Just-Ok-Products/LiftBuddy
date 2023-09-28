@@ -1,6 +1,6 @@
 ﻿namespace Lift.Buddy.Core.Models.Enums
 {
-    public enum ExercizeType
+    public enum ExerciseType
     {
         Weight = 0,
         Reps = 1,
