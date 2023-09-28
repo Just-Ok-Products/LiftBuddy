@@ -1,7 +1,6 @@
 ﻿using Lift.Buddy.API.Interfaces;
 using Lift.Buddy.Core;
 using Lift.Buddy.Core.Database;
-using Lift.Buddy.Core.Database.Entities;
 using Lift.Buddy.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using MigraDoc.DocumentObjectModel;
@@ -13,117 +12,121 @@ namespace Lift.Buddy.API.Services
     public class WorkoutPlanService : IWorkoutPlanService
     {
         private readonly LiftBuddyContext _context;
+        private readonly IDatabaseMapper _mapper;
 
-        public WorkoutPlanService(LiftBuddyContext context)
+        public WorkoutPlanService(LiftBuddyContext context, IDatabaseMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         #region Get
 
-        public async Task<Response<WorkoutPlan>> GetWorkoutPlanById(int id)
+        public async Task<Response<WorkoutPlanDTO>> GetWorkoutPlans()
         {
-            var response = new Response<WorkoutPlan>();
+            var response = new Response<WorkoutPlanDTO>();
 
             try
             {
-                // QUESTION: se ho capito bene, dando un ID > 0 si ritorna una lista con un solo risultato,
-                // altrimenti tutti i workout. corretto?
-                List<WorkoutPlan> workoutSchedules;
-                if (id > 0)
-                {
-                    workoutSchedules = await _context.WorkoutPlans.Where(x => x.Id == id).ToListAsync();
-                }
-                else
-                {
-                    workoutSchedules = await _context.WorkoutPlans.ToListAsync();
-                }
+                // limitare/lazy loading
+                var workoutPlan = await _context.WorkoutPlans.ToArrayAsync();
 
                 response.Result = true;
-                response.Body = workoutSchedules;
+                response.Body = workoutPlan.Select(p => _mapper.Map(p));
             }
             catch (Exception ex)
             {
                 response.Result = false;
-                response.Notes = Utils.ErrorMessage(nameof(GetWorkoutPlan), ex);
+                response.Notes = Utils.ErrorMessage(nameof(GetWorkoutPlans), ex);
             }
 
             return response;
         }
 
-        public async Task<Response<WorkoutPlan>> GetWorkoutPlanAssignedToUsername(string username)
+
+        public async Task<Response<WorkoutPlanDTO>> GetWorkoutPlanById(Guid id)
         {
-            var response = new Response<WorkoutPlan>();
+            var response = new Response<WorkoutPlanDTO>();
+
+            try
+            {
+                var workoutPlan = await _context.WorkoutPlans.SingleOrDefaultAsync(x => x.Id == id);
+
+                if (workoutPlan == null) throw new Exception("The workplan does not exist in the database.");
+
+                response.Result = true;
+                response.Body = new WorkoutPlanDTO[] { _mapper.Map(workoutPlan) };
+            }
+            catch (Exception ex)
+            {
+                response.Result = false;
+                response.Notes = Utils.ErrorMessage(nameof(GetWorkoutPlanById), ex);
+            }
+
+            return response;
+        }
+
+        public async Task<Response<WorkoutPlanDTO>> GetUserWorkoutPlans(string username)
+        {
+            var response = new Response<WorkoutPlanDTO>();
 
             try
             {
                 if (username == string.Empty) throw new Exception("No username given.");
 
-                // a naso questo potrebbe essere migliorato facendo una sola query e ristrutturando
-                // le references tra gli oggetti su db
-                var workoutAssignments = await _context.WorkoutAssignments
-                    .Where(x => x.WorkoutUser == username)
-                    .ToListAsync();
+                var user = await _context.Users.SingleOrDefaultAsync(x => x.Username == username);
 
-                List<WorkoutPlan> workoutSchedules;
-                foreach (var workoutAssignment in workoutAssignments)
-                {
-                    workoutSchedules = await _context.WorkoutPlans
-                        .Where(x => x.WorkoutAssignments.Contains(workoutAssignment))
-                        .ToListAsync();
+                if (user == null) throw new Exception($"User with name '{username} doesn't exists.");
 
-                    response.Body = response.Body.Concat(workoutSchedules).ToList();
-                }
+                var workoutPlans = user?.WorkoutPlans;
 
                 response.Result = true;
+                response.Body = workoutPlans?.Select(p => _mapper.Map(p));
             }
             catch (Exception ex)
             {
                 response.Result = false;
-                response.Notes = Utils.ErrorMessage(nameof(GetWorkoutPlan), ex);
+                response.Notes = Utils.ErrorMessage(nameof(GetUserWorkoutPlans), ex);
             }
 
             return response;
         }
 
-        public async Task<Response<WorkoutPlan>> GetWorkoutPlanCreatedByUsername(string username)
+        public async Task<Response<WorkoutPlanDTO>> GetWorkoutPlanCreatedByUser(string username)
         {
-            var response = new Response<WorkoutPlan>();
+            var response = new Response<WorkoutPlanDTO>();
 
             try
             {
                 if (username == string.Empty) throw new Exception("No username given.");
 
                 var workoutSchedules = await _context.WorkoutPlans
-                    .Where(x => x.CreatedBy == username)
-                    .ToListAsync();
+                    .Where(x => x.Creator.Username == username)
+                    .ToArrayAsync();
 
-                response.Body = workoutSchedules;
+                response.Body = workoutSchedules.Select(p => _mapper.Map(p));
                 response.Result = true;
             }
             catch (Exception ex)
             {
                 response.Result = false;
-                response.Notes = Utils.ErrorMessage(nameof(GetWorkoutPlan), ex);
+                response.Notes = Utils.ErrorMessage(nameof(GetWorkoutPlanCreatedByUser), ex);
             }
 
             return response;
         }
 
-        public async Task<Response<int>> GetWorkoutPlanSubscribersNumber(int workoutPlanId)
+        public async Task<Response<int>> GetWorkoutPlanSubscribersNumber(Guid workoutPlanId)
         {
             var response = new Response<int>();
             try
             {
-                var workoutPlanSubscribers = await _context.WorkoutAssignments
-                    .Where(x => x.WorkoutId == workoutPlanId)
-                    .ToListAsync();
+                var workoutPlanSubscribers = await _context.WorkoutPlans
+                    .Where(x => x.Id == workoutPlanId)
+                    .ToArrayAsync();
 
                 response.Result = true;
-                response.Body = new List<int>
-                {
-                    workoutPlanSubscribers.Count
-                };
+                response.Body = new int[] { workoutPlanSubscribers.Length };
             }
             catch (Exception ex)
             {
@@ -133,29 +136,26 @@ namespace Lift.Buddy.API.Services
             return response;
         }
 
-        public async Task<Response<Document>> GetWorkoutPlanPdf(int workplanId)
+        public async Task<Response<Document>> GetWorkoutPlanPdf(Guid workoutPlanId)
         {
             var response = new Response<Document>();
 
             try
             {
                 var workoutPlan = await _context.WorkoutPlans
-                    .Where(x => x.Id == workplanId)
-                    .FirstOrDefaultAsync();
+                    .SingleOrDefaultAsync(x => x.Id == workoutPlanId);
 
                 if (workoutPlan == null) throw new Exception("The workplan does not exist in the database.");
 
-                var doc = workoutPlan.WorkoutDays[0].ToPDF();
-                doc.UseCmykColor = true;
+                var doc = _mapper.Map(workoutPlan).ToPDF();
 
-                PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(false)
+                // TODO: servizio creazione PDF
+                var pdfRenderer = new PdfDocumentRenderer(false)
                 {
                     Document = doc
                 };
 
-                // corretto qua o dovrebbe essere registrato con il resto dei servizi?
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
                 pdfRenderer.RenderDocument();
 
                 const string filename = "HelloWorld.pdf";
@@ -172,13 +172,13 @@ namespace Lift.Buddy.API.Services
         #endregion
 
         #region Add
-        public async Task<Response<WorkoutPlan>> AddWorkoutPlan(WorkoutPlan schedule)
+        public async Task<Response<WorkoutPlanDTO>> AddWorkoutPlan(WorkoutPlanDTO workoutPlan)
         {
-            var response = new Response<WorkoutPlan>();
+            var response = new Response<WorkoutPlanDTO>();
 
             try
             {
-                _context.WorkoutPlans.Add(schedule);
+                await _context.WorkoutPlans.AddAsync(_mapper.Map(workoutPlan));
 
                 if ((await _context.SaveChangesAsync()) < 1)
                 {
@@ -186,7 +186,7 @@ namespace Lift.Buddy.API.Services
                 }
 
                 response.Result = true;
-                response.Body = new List<WorkoutPlan> { schedule };
+                response.Body = new WorkoutPlanDTO[] { workoutPlan };
             }
             catch (Exception ex)
             {
@@ -199,13 +199,17 @@ namespace Lift.Buddy.API.Services
         #endregion
 
         #region Delete
-        public async Task<Response<WorkoutPlan>> DeleteWorkoutPlan(WorkoutPlan schedule)
+        public async Task<Response<WorkoutPlanDTO>> DeleteWorkoutPlan(Guid workoutPlanId)
         {
-            var response = new Response<WorkoutPlan>();
+            var response = new Response<WorkoutPlanDTO>();
 
             try
             {
-                _context.WorkoutPlans.Remove(schedule);
+                var workoutPlan = await _context.WorkoutPlans.SingleOrDefaultAsync(p => p.Id == workoutPlanId);
+
+                if (workoutPlan == null) throw new Exception("The workplan does not exist in the database.");
+
+                _context.WorkoutPlans.Remove(workoutPlan);
 
                 if ((await _context.SaveChangesAsync()) < 1)
                 {
@@ -213,7 +217,7 @@ namespace Lift.Buddy.API.Services
                 }
 
                 response.Result = true;
-                response.Body = new List<WorkoutPlan> { schedule };
+                response.Body = new List<WorkoutPlanDTO> { _mapper.Map(workoutPlan) };
             }
             catch (Exception ex)
             {
@@ -226,13 +230,13 @@ namespace Lift.Buddy.API.Services
         #endregion
 
         #region Update
-        public async Task<Response<WorkoutPlan>> UpdateWorkoutPlan(WorkoutPlan schedule)
+        public async Task<Response<WorkoutPlanDTO>> UpdateWorkoutPlan(WorkoutPlanDTO workoutPlan)
         {
-            var response = new Response<WorkoutPlan>();
+            var response = new Response<WorkoutPlanDTO>();
 
             try
             {
-                _context.WorkoutPlans.Update(schedule);
+                _context.WorkoutPlans.Update(_mapper.Map(workoutPlan));
 
                 if ((await _context.SaveChangesAsync()) < 1)
                 {
@@ -240,7 +244,7 @@ namespace Lift.Buddy.API.Services
                 }
 
                 response.Result = true;
-                response.Body = new List<WorkoutPlan> { schedule };
+                response.Body = new WorkoutPlanDTO[] { workoutPlan };
             }
             catch (Exception ex)
             {
@@ -251,23 +255,21 @@ namespace Lift.Buddy.API.Services
             return response;
         }
 
-        public async Task<Response<WorkoutPlan>> ReviewWorkoutPlan(WorkoutPlan schedule)
+        public async Task<Response<WorkoutPlanDTO>> ReviewWorkoutPlan(Guid workoutId, int stars)
         {
-            var response = new Response<WorkoutPlan>();
+            var response = new Response<WorkoutPlanDTO>();
 
             try
             {
-                if (schedule == null) throw new Exception("Cannot review with empty data.");
+                var workoutPlan = await _context.WorkoutPlans
+                    .FirstOrDefaultAsync(x => x.Id == workoutId);
 
-                var oldSchedule = await _context.WorkoutPlans
-                    .FirstOrDefaultAsync(x => x.Id == schedule.Id);
+                if (workoutPlan == null) throw new Exception($"Trying to review non existing workout plan with id {workoutId}.");
 
-                if (oldSchedule == null) throw new Exception($"Trying to review non existing workout plan with id {schedule.Id}.");
+                workoutPlan.ReviewAverage = CalculateMean(workoutPlan.ReviewAverage, workoutPlan.ReviewCount, stars);
+                workoutPlan.ReviewCount++;
 
-                oldSchedule.ReviewAverage = (schedule.ReviewAverage + (oldSchedule.ReviewAverage * oldSchedule.ReviewsStars)) / (oldSchedule.ReviewsStars + 1);
-                oldSchedule.ReviewsStars++;
-
-                _context.WorkoutPlans.Update(oldSchedule);
+                _context.WorkoutPlans.Update(workoutPlan);
 
                 if ((await _context.SaveChangesAsync()) < 1)
                 {
@@ -275,7 +277,7 @@ namespace Lift.Buddy.API.Services
                 }
 
                 response.Result = true;
-                response.Body = new List<WorkoutPlan> { schedule };
+                response.Body = new WorkoutPlanDTO[] { _mapper.Map(workoutPlan) };
             }
             catch (Exception ex)
             {
@@ -287,5 +289,7 @@ namespace Lift.Buddy.API.Services
         }
         #endregion
 
+        private int CalculateMean(double currentMean, int count, double value)
+            => (int)(value + (currentMean * count)) / (count + 1);
     }
 }

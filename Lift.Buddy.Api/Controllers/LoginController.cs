@@ -34,7 +34,7 @@ namespace Lift.Buddy.API.Controllers
 
         [HttpPut("user-data")]
         [Authorize]
-        public async Task<IActionResult> UpdateUserData([FromBody] UserData userData)
+        public async Task<IActionResult> UpdateUserData([FromBody] UserDTO userData)
         {
             var response = await _loginService.UpdateUserData(userData);
             return NoContent();
@@ -42,16 +42,17 @@ namespace Lift.Buddy.API.Controllers
         #endregion
 
         [HttpPost("security-questions")]
-        public async Task<IActionResult> GetSecurityQuestions([FromBody] LoginCredentials loginCredentials)
+        public async Task<IActionResult> GetSecurityQuestions([FromBody] Credentials loginCredentials)
         {
             var response = await _loginService.GetSecurityQuestions(loginCredentials.Username);
             return Ok(response);
         }
 
         [HttpPost]
-        public IActionResult Login([FromBody] LoginCredentials loginCredentials)
+        public async Task<IActionResult> Login([FromBody] Credentials loginCredentials)
         {
-            if (loginCredentials == null || !_loginService.CheckCredentials(loginCredentials))
+            var success = await _loginService.CheckCredentials(loginCredentials);
+            if (!success)
             {
                 return Unauthorized();
             }
@@ -91,7 +92,7 @@ namespace Lift.Buddy.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegistrationCredentials registrationCredentials)
+        public async Task<IActionResult> Register([FromBody] UserDTO registrationCredentials)
         {
             var response = await _loginService.RegisterUser(registrationCredentials);
             if (!response.Result)
@@ -102,7 +103,7 @@ namespace Lift.Buddy.API.Controllers
         }
 
         [HttpPost("changePassword")]
-        public async Task<IActionResult> ChangePassword([FromBody] LoginCredentials loginCredentials)
+        public async Task<IActionResult> ChangePassword([FromBody] Credentials loginCredentials)
         {
             var response = await _loginService.ChangePassword(loginCredentials);
 

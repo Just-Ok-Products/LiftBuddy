@@ -10,20 +10,5 @@ namespace Lift.Buddy.Core.Database.Entities
         public DayOfWeek Day { get; set; }
 
         public virtual ICollection<Exercise> Exercises { get; set; }
-        //TODO: spostare in DTO
-        // public Document ToPDF()
-        // {
-        //     var document = new Document();
-
-        //     Section section = document.AddSection();
-
-        //     var paragraph = section.AddParagraph();
-        //     foreach (var exercise in Exercises)
-        //     {
-        //         paragraph.AddText($"{exercise}\n");
-        //     }
-
-        //     return document;
-        // }
     }
 }

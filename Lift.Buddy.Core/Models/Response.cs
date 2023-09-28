@@ -15,8 +15,7 @@ namespace Lift.Buddy.Core.Models
         [JsonPropertyName("result")]
         public bool Result { get; set; }
 
-        //QUESTION: list o IEnumerable? deve essere modificata? da fare check
         [JsonPropertyName("body")]
-        public List<T> Body { get; set; } = new List<T>();
+        public IEnumerable<T>? Body { get; set; }
     }
 }

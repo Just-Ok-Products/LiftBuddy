@@ -1,6 +1,4 @@
-﻿using Lift.Buddy.Core.Models;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Lift.Buddy.Core.Database.Entities
 {
@@ -11,10 +9,10 @@ namespace Lift.Buddy.Core.Database.Entities
 
         [Required]
         public string Name { get; set; }
-        public int ReviewsStars { get; set; } = 0;
-        public int ReviewAverage { get; set; } = 0;
+        public float ReviewAverage { get; set; }
+        public int ReviewCount { get; set; }
 
-        public virtual User? Creator { get; set; }
+        public virtual User Creator { get; set; }
         public virtual ICollection<User>? Users { get; set; }
         public virtual ICollection<WorkoutDay> WorkoutDays { get; set; }
     }

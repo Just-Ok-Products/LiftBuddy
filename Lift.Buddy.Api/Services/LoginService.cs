@@ -4,94 +4,71 @@ using Lift.Buddy.Core.Database;
 using Lift.Buddy.Core.Database.Entities;
 using Lift.Buddy.Core.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
 
 namespace Lift.Buddy.API.Services
 {
     public class LoginService : ILoginService
     {
         private readonly LiftBuddyContext _context;
+        private readonly IDatabaseMapper _mapper;
 
-        public LoginService(LiftBuddyContext context)
+        public LoginService(LiftBuddyContext context, IDatabaseMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<Response<SecurityQuestions>> GetSecurityQuestions(string username)
+        public async Task<Response<SecurityQuestionDTO>> GetSecurityQuestions(string username)
         {
-            var response = new Response<SecurityQuestions>();
-            var securityQuestions = new List<SecurityQuestions>();
+            var response = new Response<SecurityQuestionDTO>();
             try
             {
-                var user = (await _context.Users.Where(x => x.UserName == username).ToListAsync())
-                    .FirstOrDefault();
+                var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == username);
 
-                if (user == null) throw new Exception("User doesn't exist");
+                if (user == null) throw new KeyNotFoundException($"User '{username}' doesn't exist");
 
-                var securityQuestion = new SecurityQuestions
-                {
-                    Answers = user.Answers.Split(",").ToList(),
-                    Questions = user.Questions.Split(",").ToList()
-                };
-                securityQuestions.Add(securityQuestion);
+                var securityQuestion = user.SecurityQuestions?
+                    .Select(q => new SecurityQuestionDTO(q.Question, q.Answer));
+
                 response.Result = true;
-                response.Body = securityQuestions;
+                response.Body = securityQuestion ?? Enumerable.Empty<SecurityQuestionDTO>();
             }
             catch (Exception ex)
             {
-                // QUESTION: perchè ritornare all'utente il nome di funzione e metodo? 
-                // dovrebbe essere roba solo visibile nei log del backend
                 response.Result = false;
                 response.Notes = Utils.ErrorMessage(nameof(GetSecurityQuestions), ex);
             }
 
-            // non usato
-            var t = JsonSerializer.Serialize(response);
             return response;
         }
 
-        public bool CheckCredentials(LoginCredentials credentials)
+        public async Task<bool> CheckCredentials(Credentials credentials)
         {
+            if (!credentials.HasValues())
+                return false;
+
             var username = credentials.Username;
-            var password = credentials.Password;
-            // QUESTION: non dovrebbe essere anche qua async?
-            var user = _context.Users.Where(x => x.UserName == username).ToList().FirstOrDefault();
 
-            if (user == null || password == null) // metodo in LoginCredentials, o evitare null
-            {
-                return false;
-            }
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == username);
 
-            var hashedPwd = Utils.HashString(password); // userei un servizio separato che si occupa solo di hash e fare il controllo
-            if (hashedPwd != user.Password)
-            {
-                return false;
-            }
+            if (user == null) throw new KeyNotFoundException($"User '{username}' doesn't exist");
 
-            return true;
+            var hashedPwd = Utils.HashString(credentials.Password); // userei un servizio separato che si occupa solo di hash e fare il controllo
+            return hashedPwd == user.Password;
         }
 
-        public async Task<Response<RegistrationCredentials>> RegisterUser(RegistrationCredentials credentials)
+        public async Task<Response<UserDTO>> RegisterUser(UserDTO user)
         {
-            var response = new Response<RegistrationCredentials>();
+            var response = new Response<UserDTO>();
 
             try
             {
-                var user = new User
-                {
-                    UserName = credentials.Username,
-                    Name = credentials.Name,
-                    Surname = credentials.Surname,
-                    Email = credentials.Email,
-                    Password = Utils.HashString(credentials.Password),
-                    Questions = string.Join(",", credentials.Questions),
-                    Answers = string.Join(",", credentials.Answers)
-                };
+                var newUser = _mapper.Map(user);
 
-                _context.Users.Add(user);
+                await _context.Users.AddAsync(newUser);
                 if ((await _context.SaveChangesAsync()) == 0)
                 {
-                    throw new Exception("No changes on database");
+                    throw new Exception($"User '{user.Credentials.Username}' was not added to the database.");
                 }
 
                 response.Result = true;
@@ -105,23 +82,23 @@ namespace Lift.Buddy.API.Services
             return response;
         }
 
-        public async Task<Response<LoginCredentials>> ChangePassword(LoginCredentials loginCredentials)
+        public async Task<Response<Credentials>> ChangePassword(Credentials credentials)
         {
-            var response = new Response<LoginCredentials>();
+            var response = new Response<Credentials>();
             try
             {
-                var user = (await _context.Users.Where(x => x.UserName == loginCredentials.Username).ToListAsync()).FirstOrDefault();
+                var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == credentials.Username);
 
-                if (user == null) throw new Exception("The user doens't exist in the database");
+                if (user == null) throw new KeyNotFoundException($"User '{credentials.Username}' doesn't exist");
 
-                if (loginCredentials.Password == null) throw new Exception("Trying to change password to null");
+                if (credentials.Password == null) throw new Exception("Trying to change password to null");
 
-                user.Password = Utils.HashString(loginCredentials.Password);
+                user.Password = Utils.HashString(credentials.Password);
                 _context.Users.Update(user);
 
                 if ((await _context.SaveChangesAsync()) == 0)
                 {
-                    throw new Exception("No changes on database");
+                    throw new Exception($"Password for user '{credentials.Username}' could not updated in the database.");
                 }
 
                 response.Result = true;
@@ -136,24 +113,19 @@ namespace Lift.Buddy.API.Services
         }
 
         #region User Data
-        public async Task<Response<UserData>> GetUserData(string username)
+        public async Task<Response<UserDTO>> GetUserData(string username)
         {
-            var response = new Response<UserData>();
-            var userData = new UserData();
+            var response = new Response<UserDTO>();
 
             try
             {
-                var user = (await _context.Users.Where(x => x.UserName == username).ToListAsync()).FirstOrDefault();
+                var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == username);
 
-                if (user == null) throw new Exception($"No user was found with username {username}.");
+                if (user == null) throw new KeyNotFoundException($"User '{username}' doesn't exist");
 
-                //TODO: mapper da User (entità) a UserData (model)
-                userData.Username = user.UserName ?? "";
-                userData.Name = user.Name ?? "";
-                userData.Surname = user.Surname ?? "";
-                userData.Email = user.Email ?? "";
+                var userData = _mapper.Map(user);
 
-                response.Body.Add(userData);
+                response.Body = new UserDTO[] { userData };
                 response.Result = true;
 
             }
@@ -166,18 +138,16 @@ namespace Lift.Buddy.API.Services
             return response;
         }
 
-        public async Task<Response<UserData>> UpdateUserData(UserData userData)
+        public async Task<Response<UserDTO>> UpdateUserData(UserDTO userData)
         {
-            var response = new Response<UserData>();
+            var response = new Response<UserDTO>();
 
             try
             {
-                var user = (await _context.Users.Where(x => x.UserName == userData.Username).ToArrayAsync()).FirstOrDefault();
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(x => x.Username == userData.Credentials.Username);
 
-                if (user == null)
-                {
-                    throw new Exception($"No user was found with username {userData.Username}.");
-                }
+                if (user == null) throw new KeyNotFoundException($"User '{userData.Credentials.Username}' doesn't exist");
 
                 user.Surname = userData.Surname;
                 user.Name = userData.Name;

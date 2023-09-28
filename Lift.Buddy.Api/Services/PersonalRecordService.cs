@@ -10,43 +10,50 @@ namespace Lift.Buddy.API.Services
     public class PersonalRecordService : IPersonalRecordService
     {
         private readonly LiftBuddyContext _context;
+        private readonly IDatabaseMapper _mapper;
 
-        public PersonalRecordService(LiftBuddyContext context)
+        public PersonalRecordService(LiftBuddyContext context, IDatabaseMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<Response<UserPersonalRecord>> GetByUser(string username)
+        public async Task<Response<PersonalRecord>> GetByUsername(string username)
         {
-            var response = new Response<UserPersonalRecord>();
+            var response = new Response<PersonalRecord>();
 
             try
             {
                 if (string.IsNullOrEmpty(username)) throw new Exception("No username received");
 
-                var userPR = await _context.UserPRs.Where(x => x.Username == username).ToListAsync();
+                //var personalRecord = await _context.UserPRs.Where(x => x.Username == username).ToListAsync();
+                var personalRecords = (await _context.Users.SingleOrDefaultAsync(x => x.Username == username))?
+                    .PersonalRecords;
+                //.Select(pr => pr.ToDTO());
 
-                response.Body = userPR;
+                response.Body = personalRecords?.ToArray() ?? Enumerable.Empty<PersonalRecord>();
                 response.Result = true;
             }
             catch (Exception ex)
             {
-                response.Notes = Utils.ErrorMessage(nameof(GetByUser), ex);
+                response.Notes = Utils.ErrorMessage(nameof(GetByUsername), ex);
                 response.Result = false;
             }
 
             return response;
         }
 
-        public async Task<Response<UserPersonalRecord>> AddPersonalRecord(UserPersonalRecord userPR)
+        public async Task<Response<PersonalRecord>> AddPersonalRecord(PersonalRecordDTO record)
         {
-            var response = new Response<UserPersonalRecord>();
+            var response = new Response<PersonalRecord>();
 
             try
             {
-                if (userPR == null) throw new Exception("No data received");
+                if (record == null) throw new Exception("No data received");
 
-                await _context.UserPRs.AddAsync(userPR);
+                var personalRecord = _mapper.Map(record);
+
+                await _context.PersonalRecords.AddAsync(personalRecord);
 
                 if ((await _context.SaveChangesAsync()) < 1)
                 {
@@ -64,15 +71,17 @@ namespace Lift.Buddy.API.Services
             return response;
         }
 
-        public async Task<Response<UserPersonalRecord>> UpdatePersonalRecord(UserPersonalRecord userPR)
+        public async Task<Response<PersonalRecord>> UpdatePersonalRecord(PersonalRecordDTO record)
         {
-            var response = new Response<UserPersonalRecord>();
+            var response = new Response<PersonalRecord>();
 
             try
             {
-                if (userPR == null) throw new Exception("No data received");
+                if (record == null) throw new Exception("No data received");
 
-                _context.UserPRs.Update(userPR);
+                var personalRecord = _mapper.Map(record);
+
+                _context.PersonalRecords.Update(personalRecord);
 
                 if ((await _context.SaveChangesAsync()) < 1)
                 {

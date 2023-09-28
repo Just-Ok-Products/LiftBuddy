@@ -7,19 +7,16 @@ namespace Lift.Buddy.Core.Database.Entities
     {
         [Key]
         public Guid Id { get; set; }
+        [Required]
         public string ExerciseName { get; set; } = string.Empty;
+        [Required]
         public int Series { get; set; }
+        [Required]
         public int Reps { get; set; }
-        public Weight? Weight { get; set; }
+
+        public double? Weight { get; set; }
+        public int? UOM { get; set; }
 
         public virtual Exercise Exercise { get; set; }
     }
-
-    public enum UnitOfMeasure
-    {
-        KG,
-        LB
-    }
-
-    public record Weight(double Amount, UnitOfMeasure UnitOfMeasure);
 }

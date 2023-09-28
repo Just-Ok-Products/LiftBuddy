@@ -1,5 +1,6 @@
 ﻿using Lift.Buddy.API.Interfaces;
 using Lift.Buddy.Core.Database.Entities;
+using Lift.Buddy.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -22,8 +23,8 @@ namespace Lift.Buddy.API.Controllers
             var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var res = string.IsNullOrEmpty(username)
-                ? await _workoutScheduleService.GetWorkoutPlan(-1)
-                : await _workoutScheduleService.GetWorkoutPlanAssignedToUsername(username);
+                ? await _workoutScheduleService.GetWorkoutPlans()
+                : await _workoutScheduleService.GetUserWorkoutPlans(username);
 
             return Ok(res);
         }
@@ -31,19 +32,19 @@ namespace Lift.Buddy.API.Controllers
         [HttpGet("CreatedBy/{username}")]
         public async Task<IActionResult> GetWorkoutsCreatedBy(string username)
         {
-            var response = await _workoutScheduleService.GetWorkoutPlanCreatedByUsername(username);
+            var response = await _workoutScheduleService.GetWorkoutPlanCreatedByUser(username);
             return Ok(response);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById(Guid id)
         {
-            var response = await _workoutScheduleService.GetWorkoutPlan(id);
+            var response = await _workoutScheduleService.GetWorkoutPlanById(id);
             return Ok(response);
         }
 
         [HttpGet("pdf/{id}")]
-        public async Task<IActionResult> GetWorkplanPdf(int id)
+        public async Task<IActionResult> GetWorkplanPdf(Guid id)
         {
             var response = await _workoutScheduleService.GetWorkoutPlanPdf(id);
             return Ok(response);
@@ -51,14 +52,14 @@ namespace Lift.Buddy.API.Controllers
 
 
         [HttpGet("subscribers/{id}")]
-        public async Task<IActionResult> GetWorkoutPlanSubscribers(int id)
+        public async Task<IActionResult> GetWorkoutPlanSubscribers(Guid id)
         {
             var response = await _workoutScheduleService.GetWorkoutPlanSubscribersNumber(id);
             return Ok(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] WorkoutPlan workoutSchedule)
+        public async Task<IActionResult> Add([FromBody] WorkoutPlanDTO workoutSchedule)
         {
             var response = await _workoutScheduleService.AddWorkoutPlan(workoutSchedule);
             if (!response.Result)
@@ -69,9 +70,12 @@ namespace Lift.Buddy.API.Controllers
         }
 
         [HttpPut("review")]
-        public async Task<IActionResult> ReviewWorkouPlan([FromBody] WorkoutPlan workoutPlan)
+        public async Task<IActionResult> ReviewWorkouPlan(
+            [FromBody] Guid workoutPlanId,
+            [FromBody] int stars
+            )
         {
-            var response = await _workoutScheduleService.ReviewWorkoutPlan(workoutPlan);
+            var response = await _workoutScheduleService.ReviewWorkoutPlan(workoutPlanId, stars);
             if (!response.Result)
             {
                 return Ok(response);
@@ -80,7 +84,7 @@ namespace Lift.Buddy.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] WorkoutPlan workoutSchedule)
+        public async Task<IActionResult> Update([FromBody] WorkoutPlanDTO workoutSchedule)
         {
             var response = await _workoutScheduleService.UpdateWorkoutPlan(workoutSchedule);
             if (!response.Result)
@@ -91,9 +95,9 @@ namespace Lift.Buddy.API.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete([FromBody] WorkoutPlan workoutSchedule)
+        public async Task<IActionResult> Delete([FromBody] Guid workoutScheduleId)
         {
-            var response = await _workoutScheduleService.DeleteWorkoutPlan(workoutSchedule);
+            var response = await _workoutScheduleService.DeleteWorkoutPlan(workoutScheduleId);
             if (!response.Result)
             {
                 return Ok(response);

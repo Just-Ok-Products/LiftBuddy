@@ -5,8 +5,8 @@ namespace Lift.Buddy.API.Interfaces
 {
     public interface IPersonalRecordService
     {
-        Task<Response<UserPersonalRecord>> GetByUser(string username);
-        Task<Response<UserPersonalRecord>> AddPersonalRecord(UserPersonalRecord userPR);
-        Task<Response<UserPersonalRecord>> UpdatePersonalRecord(UserPersonalRecord userPR);
+        Task<Response<PersonalRecord>> GetByUsername(string username);
+        Task<Response<PersonalRecord>> AddPersonalRecord(PersonalRecordDTO userPR);
+        Task<Response<PersonalRecord>> UpdatePersonalRecord(PersonalRecordDTO userPR);
     }
 }
