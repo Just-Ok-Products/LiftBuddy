@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { UserData } from 'src/app/Model/UserData';
+import { User } from 'src/app/Model/User';
 
 @Component({
   selector: 'app-user-data-form',
@@ -11,7 +11,7 @@ export class UserDataFormComponent implements OnInit {
 
   constructor() { }
 
-  @Input() userData: UserData | undefined;
+  @Input() userData: User | undefined;
 
   ngOnInit() {
     this.initFormData();
@@ -38,7 +38,7 @@ export class UserDataFormComponent implements OnInit {
   private initFormChangeSubs() {
     this.userDataForm.valueChanges.subscribe(value => {
       if (this.userData == undefined) {
-        this.userData = new UserData();
+        this.userData = new User();
       }
       this.userData.username = value.username;
       this.userData.name = value.name;

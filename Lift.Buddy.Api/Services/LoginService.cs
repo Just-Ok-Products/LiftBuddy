@@ -1,7 +1,6 @@
 ﻿using Lift.Buddy.API.Interfaces;
 using Lift.Buddy.Core;
 using Lift.Buddy.Core.Database;
-using Lift.Buddy.Core.Database.Entities;
 using Lift.Buddy.Core.Models;
 using Microsoft.EntityFrameworkCore;
 

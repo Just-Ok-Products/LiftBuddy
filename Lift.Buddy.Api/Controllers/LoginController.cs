@@ -11,12 +11,12 @@ namespace Lift.Buddy.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LoginController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly IConfiguration _configuration;
         private readonly ILoginService _loginService;
 
-        public LoginController(IConfiguration configuration, ILoginService loginService)
+        public AuthController(IConfiguration configuration, ILoginService loginService)
         {
             _configuration = configuration;
             _loginService = loginService;
@@ -42,9 +42,10 @@ namespace Lift.Buddy.API.Controllers
         #endregion
 
         [HttpPost("security-questions")]
-        public async Task<IActionResult> GetSecurityQuestions([FromBody] Credentials loginCredentials)
+        [Authorize]
+        public async Task<IActionResult> GetSecurityQuestions([FromBody] Credentials credentials)
         {
-            var response = await _loginService.GetSecurityQuestions(loginCredentials.Username);
+            var response = await _loginService.GetSecurityQuestions(credentials.Username);
             return Ok(response);
         }
 

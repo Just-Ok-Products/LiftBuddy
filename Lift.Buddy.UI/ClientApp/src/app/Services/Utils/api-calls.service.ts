@@ -64,13 +64,16 @@ export class ApiCallsService {
             'Authorization': `Bearer ${ApiCallsService.jwtToken}`
           }
         });
+
       if (!response.ok) {
         throw new Error(`Error on post call: ${response.statusText} ${response.status}`);
       }
+
       if (response.status != 204) {
         const result = (await response.json()) as Response<T>;
         return result;
       }
+      
       apiResponse.result = true;
     } catch (error) {
 

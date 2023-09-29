@@ -7,7 +7,7 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 })
 export class PrMenuComponent implements OnInit {
 
-  @Output() onAddExercize: EventEmitter<void> = new EventEmitter();
+  @Output() onAddExercise: EventEmitter<void> = new EventEmitter();
   @Output() onSave: EventEmitter<void> = new EventEmitter();
 
   constructor() { }
@@ -15,8 +15,8 @@ export class PrMenuComponent implements OnInit {
   ngOnInit() {
   }
 
-  public addExercize() {
-    this.onAddExercize.emit();
+  public addExercise() {
+    this.onAddExercise.emit();
   }
 
   public save() {

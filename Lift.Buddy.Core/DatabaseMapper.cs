@@ -29,7 +29,7 @@ public class DatabaseMapper : IDatabaseMapper
     {
         return new ExerciseDTO
         {
-            Id = exercise.Id,
+            Id = exercise.ExerciseId,
             Name = exercise.Name,
             Series = exercise.Series,
             Repetitions = exercise.Repetitions,
@@ -42,7 +42,7 @@ public class DatabaseMapper : IDatabaseMapper
     {
         return new Exercise
         {
-            Id = exercise.Id,
+            ExerciseId = exercise.Id,
             Name = exercise.Name,
             Series = exercise.Series,
             Repetitions = exercise.Repetitions,
@@ -55,7 +55,7 @@ public class DatabaseMapper : IDatabaseMapper
     {
         var record = new PersonalRecordDTO
         {
-            Id = personalRecord.Id,
+            Id = personalRecord.PersonalRecordId,
             Series = personalRecord.Series,
             Reps = personalRecord.Reps,
             Exercise = Map(personalRecord.Exercise)
@@ -75,7 +75,7 @@ public class DatabaseMapper : IDatabaseMapper
     {
         return new PersonalRecord
         {
-            Id = personalRecord.Id ?? Guid.NewGuid(),
+            PersonalRecordId = personalRecord.Id ?? Guid.NewGuid(),
             ExerciseName = personalRecord.Exercise.Name,
             Series = personalRecord.Series,
             Reps = personalRecord.Reps,
@@ -109,7 +109,7 @@ public class DatabaseMapper : IDatabaseMapper
             {
                 return new SecurityQuestion
                 {
-                    Id = Guid.NewGuid(),
+                    SecurityQuestionId = Guid.NewGuid(),
                     Answer = q.Answer,
                     Question = q.Question
                 };

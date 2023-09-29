@@ -1,5 +1,4 @@
 ﻿using Lift.Buddy.API.Interfaces;
-using Lift.Buddy.Core.Database.Entities;
 using Lift.Buddy.Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,14 +27,18 @@ namespace Lift.Buddy.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] PersonalRecordDTO userRecord)
+        public async Task<IActionResult> Add(
+            [FromBody] string username,
+            [FromBody] PersonalRecordDTO userRecord)
         {
             var response = await _recordService.AddPersonalRecord(userRecord);
             return Ok(response);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] PersonalRecordDTO userRecord)
+        public async Task<IActionResult> Update(
+            [FromBody] string username,
+            [FromBody] PersonalRecordDTO userRecord)
         {
             var response = await _recordService.UpdatePersonalRecord(userRecord);
             return Ok(response);

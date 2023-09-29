@@ -1,6 +1,6 @@
-import { Exercize } from "./Exercise";
+import { Exercise as Exercise } from "./Exercise";
 
 export class WorkoutDay {
   public day: number | undefined;
-  public exercises: Exercize[] = [];
+  public exercises: Exercise[] = [];
 }

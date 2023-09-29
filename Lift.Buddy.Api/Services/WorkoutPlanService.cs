@@ -50,7 +50,8 @@ namespace Lift.Buddy.API.Services
 
             try
             {
-                var workoutPlan = await _context.WorkoutPlans.SingleOrDefaultAsync(x => x.Id == id);
+                var workoutPlan = await _context.WorkoutPlans
+                    .SingleOrDefaultAsync(x => x.WorkoutPlanId == id);
 
                 if (workoutPlan == null) throw new Exception("The workplan does not exist in the database.");
 
@@ -122,7 +123,7 @@ namespace Lift.Buddy.API.Services
             try
             {
                 var workoutPlanSubscribers = await _context.WorkoutPlans
-                    .Where(x => x.Id == workoutPlanId)
+                    .Where(x => x.WorkoutPlanId == workoutPlanId)
                     .ToArrayAsync();
 
                 response.Result = true;
@@ -143,7 +144,7 @@ namespace Lift.Buddy.API.Services
             try
             {
                 var workoutPlan = await _context.WorkoutPlans
-                    .SingleOrDefaultAsync(x => x.Id == workoutPlanId);
+                    .SingleOrDefaultAsync(x => x.WorkoutPlanId == workoutPlanId);
 
                 if (workoutPlan == null) throw new Exception("The workplan does not exist in the database.");
 
@@ -205,7 +206,8 @@ namespace Lift.Buddy.API.Services
 
             try
             {
-                var workoutPlan = await _context.WorkoutPlans.SingleOrDefaultAsync(p => p.Id == workoutPlanId);
+                var workoutPlan = await _context.WorkoutPlans
+                    .SingleOrDefaultAsync(p => p.WorkoutPlanId == workoutPlanId);
 
                 if (workoutPlan == null) throw new Exception("The workplan does not exist in the database.");
 
@@ -262,7 +264,7 @@ namespace Lift.Buddy.API.Services
             try
             {
                 var workoutPlan = await _context.WorkoutPlans
-                    .FirstOrDefaultAsync(x => x.Id == workoutId);
+                    .FirstOrDefaultAsync(x => x.WorkoutPlanId == workoutId);
 
                 if (workoutPlan == null) throw new Exception($"Trying to review non existing workout plan with id {workoutId}.");
 

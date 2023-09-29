@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { PersonalRecord } from 'src/app/Model/PersonalRecord';
-import { UserPR } from 'src/app/Model/UserPR';
 import { SnackBarService } from 'src/app/Services/Utils/snack-bar.service';
-import { PrService } from 'src/app/Services/pr.service';
+import { LoginService } from 'src/app/Services/login.service';
+import { PersonalRecordService } from 'src/app/Services/pr.service';
 
 @Component({
   selector: 'app-pr',
@@ -13,21 +13,21 @@ import { PrService } from 'src/app/Services/pr.service';
 export class PrComponent implements OnInit {
 
   constructor(
-    private prService: PrService,
+    private loginService: LoginService,
+    private personalRecordService: PersonalRecordService,
     private snackbarService: SnackBarService
   ) { }
 
-  public prForm: FormGroup = new FormGroup({
-    exercizes: new FormControl<PersonalRecord[]>([])
-  });
-
   async ngOnInit() {
-    await this.initUserPR();
+    await this.initUserPersonalRecord();
   }
 
-  private isUpdate: boolean = false;
-  private async initUserPR() {
-    const prResp = await this.prService.get();
+  public prForm: FormGroup = new FormGroup({
+    exercises: new FormControl<PersonalRecord[]>([])
+  });
+  
+  private async initUserPersonalRecord() {
+    const prResp = await this.personalRecordService.get();
 
     if (!prResp.result) {
       this.snackbarService.operErrorSnackbar(`Failed to load PR. Error ${prResp.notes}`)
@@ -38,20 +38,17 @@ export class PrComponent implements OnInit {
       return;
     }
 
-    this.isUpdate = true;
-    this.prForm.controls['exercizes'].setValue(prResp.body[0].personalRecords);
+    this.prForm.controls['exercises'].setValue(prResp.body[0]);
   }
 
-  public addExercize() {
-    this.prForm.controls['exercizes'].value.push(new PersonalRecord());
+  public addExercise() {
+    this.prForm.controls['exercises'].value.push(new PersonalRecord());
   }
 
-  public async save() {
-    let userPR = new UserPR();
+  public async update() {
+    let records = this.prForm.controls['exercises'].value;
 
-    userPR.personalRecords = this.prForm.controls['exercizes'].value;
-
-    const saveResp = await this.prService.savePR(userPR, this.isUpdate);
+    const saveResp = await this.personalRecordService.updatePersonalRecord(this.loginService.user?.username!, records);
 
     if (!saveResp.result) {
       this.snackbarService.operErrorSnackbar(`An exception occurred during save. Ex ${saveResp.notes}`);
@@ -60,5 +57,4 @@ export class PrComponent implements OnInit {
 
     this.snackbarService.openSuccessSnackbar('Personal results succesfully saved.')
   }
-
 }

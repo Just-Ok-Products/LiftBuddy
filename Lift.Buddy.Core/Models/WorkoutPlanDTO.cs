@@ -9,7 +9,7 @@ namespace Lift.Buddy.Core.Models
         public int ReviewsStars { get; set; } = 0;
         public int ReviewAverage { get; set; } = 0;
 
-        public UserDTO? Creator { get; set; }
+        public UserDTO Creator { get; set; }
         public IEnumerable<WorkoutDayDTO> WorkoutDays { get; set; } = Enumerable.Empty<WorkoutDayDTO>();
 
         public Document ToPDF()

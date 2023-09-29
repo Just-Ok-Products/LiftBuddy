@@ -1,14 +1,15 @@
-﻿using MigraDoc.DocumentObjectModel;
-using System.Text.Json.Serialization;
-using System;
+﻿namespace Lift.Buddy.Core.Database.Entities;
 
-namespace Lift.Buddy.Core.Database.Entities
+public class WorkoutDay
 {
-    public class WorkoutDay
+    public WorkoutDay()
     {
-        public Guid Id { get; set; }
-        public DayOfWeek Day { get; set; }
-
-        public virtual ICollection<Exercise> Exercises { get; set; }
+        Exercises = new HashSet<Exercise>();
     }
+
+    public Guid Id { get; set; }
+    public DayOfWeek Day { get; set; }
+
+    public virtual ICollection<Exercise> Exercises { get; set; }
+    public virtual WorkoutPlan WorkoutPlan { get; set; }
 }

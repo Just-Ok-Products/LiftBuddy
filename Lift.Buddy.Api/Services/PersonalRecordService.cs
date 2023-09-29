@@ -18,20 +18,21 @@ namespace Lift.Buddy.API.Services
             _mapper = mapper;
         }
 
-        public async Task<Response<PersonalRecord>> GetByUsername(string username)
+        public async Task<Response<PersonalRecordDTO>> GetByUsername(string username)
         {
-            var response = new Response<PersonalRecord>();
+            var response = new Response<PersonalRecordDTO>();
 
             try
             {
                 if (string.IsNullOrEmpty(username)) throw new Exception("No username received");
 
-                //var personalRecord = await _context.UserPRs.Where(x => x.Username == username).ToListAsync();
-                var personalRecords = (await _context.Users.SingleOrDefaultAsync(x => x.Username == username))?
-                    .PersonalRecords;
-                //.Select(pr => pr.ToDTO());
+                var user = await _context.Users
+                    .SingleOrDefaultAsync(x => x.Username == username);
 
-                response.Body = personalRecords?.ToArray() ?? Enumerable.Empty<PersonalRecord>();
+
+                response.Body = user?.PersonalRecords
+                    .Select(pr => _mapper.Map(pr)) ?? Enumerable.Empty<PersonalRecordDTO>();
+
                 response.Result = true;
             }
             catch (Exception ex)
@@ -43,9 +44,9 @@ namespace Lift.Buddy.API.Services
             return response;
         }
 
-        public async Task<Response<PersonalRecord>> AddPersonalRecord(PersonalRecordDTO record)
+        public async Task<Response<PersonalRecordDTO>> AddPersonalRecord(PersonalRecordDTO record)
         {
-            var response = new Response<PersonalRecord>();
+            var response = new Response<PersonalRecordDTO>();
 
             try
             {
@@ -71,9 +72,9 @@ namespace Lift.Buddy.API.Services
             return response;
         }
 
-        public async Task<Response<PersonalRecord>> UpdatePersonalRecord(PersonalRecordDTO record)
+        public async Task<Response<PersonalRecordDTO>> UpdatePersonalRecord(PersonalRecordDTO record)
         {
-            var response = new Response<PersonalRecord>();
+            var response = new Response<PersonalRecordDTO>();
 
             try
             {

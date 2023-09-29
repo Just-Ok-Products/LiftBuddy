@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserData } from 'src/app/Model/UserData';
+import { User } from 'src/app/Model/User';
 import { SnackBarService } from 'src/app/Services/Utils/snack-bar.service';
 import { LoginService } from 'src/app/Services/login.service';
 
@@ -19,7 +19,7 @@ export class UserDataComponent implements OnInit {
     await this.getUserData();
   }
 
-  public userData: UserData | undefined;
+  public userData: User | undefined;
 
   private async getUserData() {
     let userDataResp = await this.loginService.getUserData();
@@ -35,6 +35,7 @@ export class UserDataComponent implements OnInit {
     if (this.userData == undefined) {
       return;
     }
+    
     const response = await this.loginService.updateUserData(this.userData);
 
     if (!response.result) {

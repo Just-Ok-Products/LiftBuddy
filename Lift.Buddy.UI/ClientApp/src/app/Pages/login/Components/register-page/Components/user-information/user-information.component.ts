@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { RegistrationCredentials } from 'src/app/Model/RegistraitonCredentials';
+import { Credentials } from 'src/app/Model/Credentials';
+import { User } from 'src/app/Model/User';
 import { SnackBarService } from 'src/app/Services/Utils/snack-bar.service';
 import { LoginService } from 'src/app/Services/login.service';
 
@@ -16,10 +17,10 @@ export class UserInformationComponent implements OnInit {
 
   public form: FormGroup = new FormGroup({
     username: new FormControl('', Validators.required),
+    password: new FormControl('', Validators.required),
     name: new FormControl(''),
     surname: new FormControl(''),
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', Validators.required),
     confirmPassword: new FormControl('', [Validators.required, this.notSamePasswordError])
   });
 
@@ -30,6 +31,7 @@ export class UserInformationComponent implements OnInit {
 
   ngOnInit() {
   }
+  
   public passwordVisible: boolean = false;
   public confirmPasswordVisible: boolean = false;
 
@@ -45,13 +47,16 @@ export class UserInformationComponent implements OnInit {
       this.snackbarService.operErrorSnackbar('Fill the form correctly.');
       return;
     }
-    let registrationCredentials: RegistrationCredentials = new RegistrationCredentials();
-    registrationCredentials.username = this.form?.controls['username'].value;
-    registrationCredentials.name = this.form?.controls['name'].value;
-    registrationCredentials.surname = this.form?.controls['surname'].value;
-    registrationCredentials.email = this.form?.controls['email'].value;
-    registrationCredentials.password = this.form?.controls['password'].value;
-    this.loginService.registrationCredentials = registrationCredentials;
+
+    let credentials: Credentials = new Credentials(this.form?.controls['username'].value, this.form?.controls['password'].value);
+    let user: User = new User();
+
+    user.name = this.form?.controls['name'].value;
+    user.surname = this.form?.controls['surname'].value;
+    user.email = this.form?.controls['email'].value;
+    user.credentials = credentials;
+
+    this.loginService.user = user;
     this.onConfirm.emit();
   }
 

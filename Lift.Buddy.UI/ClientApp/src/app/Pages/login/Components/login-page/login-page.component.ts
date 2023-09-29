@@ -2,7 +2,7 @@ import { AuthGuard } from './../../../../Services/Guards/AuthGuard';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from 'src/app/Services/login.service';
-import { LoginCredetials } from 'src/app/Model/LoginCredentials';
+import { Credentials } from 'src/app/Model/Credentials';
 import { SnackBarService } from 'src/app/Services/Utils/snack-bar.service';
 import { Router } from '@angular/router';
 
@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.css']
 })
+
 export class LoginPageComponent implements OnInit {
 
   constructor(
@@ -25,7 +26,7 @@ export class LoginPageComponent implements OnInit {
 
   public loginForm = new FormGroup({
     username: new FormControl('', Validators.required),
-    password: new FormControl('')
+    password: new FormControl('', Validators.required)
   })
 
   ngOnInit() {
@@ -37,10 +38,8 @@ export class LoginPageComponent implements OnInit {
       this.snackBarService.operErrorSnackbar("Fill the required fields.");
       return;
     }
-    let loginCredentials = new LoginCredetials();
-
-    loginCredentials.password = this.loginForm.controls['password'].value;
-    loginCredentials.username = this.loginForm.controls['username'].value;
+    
+    let loginCredentials = new Credentials(this.loginForm.controls['username'].value!, this.loginForm.controls['password'].value!);
 
     var response = await this.loginService.login(loginCredentials);
 
@@ -61,5 +60,4 @@ export class LoginPageComponent implements OnInit {
 
     this.router.navigate(['login', 'forgot-password']);
   }
-
 }

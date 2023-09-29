@@ -1,4 +1,4 @@
-export class Exercize {
+export class Exercise {
   public name: string = '';
   public reps: number = 1;
   public series: number = 1;

@@ -1,66 +1,61 @@
 import { ApiCallsService } from './Utils/api-calls.service';
-import { LoginCredetials } from '../Model/LoginCredentials';
 import { Injectable, inject } from '@angular/core';
-import { RegistrationCredentials } from 'src/app/Model/RegistraitonCredentials';
-import { SecurityQuestions } from 'src/app/Model/SecurityQuestions';
+import { Credentials } from 'src/app/Model/Credentials';
 import { CanActivateFn, Router } from '@angular/router';
 import { SnackBarService } from './Utils/snack-bar.service';
-import { UserData } from '../Model/UserData';
+import { User } from '../Model/User';
+import { SecurityQuestions } from '../Model/SecurityQuestions';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
 
-  constructor (
-    private apiCalls: ApiCallsService
-  ) { }
+  constructor (private apiCalls: ApiCallsService) { }
 
-  private defaultUrl: string = "api/Login";
+  private defaultUrl: string = "api/Auth";
+  public currentUsername: string = "";
+  public user : User | undefined;
 
   public async getUserData() {
-    let userData = new UserData();
-    userData.username = this.currentUsername;
-    const response = await this.apiCalls.apiGet<UserData>(this.defaultUrl + '/user-data');
+    const response = await this.apiCalls.apiGet<User>(this.defaultUrl + '/user-data');
 
     return response;
   }
 
-  public async updateUserData(userData: UserData) {
-    const response = await this.apiCalls.apiPut<UserData>(this.defaultUrl + '/user-data', userData);
+  public async updateUserData(userData: User) {
+    const response = await this.apiCalls.apiPut<User>(this.defaultUrl + '/user-data', userData);
 
     return response;
   }
 
-  public async login(loginCredentials: LoginCredetials) {
-    const response = await this.apiCalls.apiPost<string>(this.defaultUrl, loginCredentials);
+  public async login(credentials: Credentials) {
+    const response = await this.apiCalls.apiPost<string>(this.defaultUrl + '/login', credentials);
 
     if (response.result) {
       ApiCallsService.jwtToken = response.body[0];
     }
+
     return response;
   }
 
-  public registrationCredentials: RegistrationCredentials | undefined;
-  public async register(registrationCredentials: RegistrationCredentials) {
-    const response = await this.apiCalls.apiPost<RegistrationCredentials>(this.defaultUrl + '/register', registrationCredentials);
+  public async register(user: User) {
+    const response = await this.apiCalls.apiPost<User>(this.defaultUrl + '/register', user);
     return response;
   }
 
   public logout() {
-    this.currentUsername = '';
     ApiCallsService.jwtToken = '';
     return true;
   }
 
-  public currentUsername: string = "";
-  public async changePassword(loginCredential: LoginCredetials) {
-    const response = await this.apiCalls.apiPost<LoginCredetials>(this.defaultUrl + '/changePassword', loginCredential);
+  public async changePassword(credential: Credentials) {
+    const response = await this.apiCalls.apiPost<Credentials>(this.defaultUrl + '/changePassword', credential);
     return response;
   }
 
-  public async getSecurityQuestions(loginCredential: LoginCredetials) {
-    const response = await this.apiCalls.apiPost<SecurityQuestions>(this.defaultUrl + `/security-questions`, loginCredential);
+  public async getSecurityQuestions(username: Credentials) {
+    const response = await this.apiCalls.apiPost<SecurityQuestions>(this.defaultUrl + `/security-questions`, username);
     return response;
   }
 

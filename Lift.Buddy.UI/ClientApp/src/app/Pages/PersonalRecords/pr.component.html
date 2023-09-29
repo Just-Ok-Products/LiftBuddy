@@ -1,0 +1,31 @@
+<app-page-structure
+  [left-menu]="leftMenu"
+  [main]="main"
+  [right-menu]="rightMenu"
+>
+</app-page-structure>
+
+<ng-template #leftMenu>
+  <app-left-menu />
+</ng-template>
+
+<ng-template #main>
+  <div class="container mt-3 pr-container">
+    <div
+      class="row"
+      *ngFor="
+        let exercise of prForm.controls['exercises'].value;
+        let idx = index
+      "
+    >
+      <app-pr-exercise
+        [index]="idx + 1"
+        [exercise]="exercise"
+      ></app-pr-exercise>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #rightMenu>
+  <app-pr-menu (onAddexercise)="addexercise()" (onSave)="save()"></app-pr-menu>
+</ng-template>

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Exercize } from 'src/app/Model/Exercise';
+import { Exercise } from 'src/app/Model/Exercise';
 import { WorkoutDay } from 'src/app/Model/WorkoutDay';
 import { WorkoutPlan } from 'src/app/Model/WorkoutPlan';
 
@@ -15,30 +15,30 @@ export class DailyWorkoutComponent implements OnInit {
 
   @Input() day: number = 0;
   @Input() workoutPlan: WorkoutPlan | undefined;
-  @Input() exercises: FormControl<Exercize[] | null> | undefined;
+  @Input() exercises: FormControl<Exercise[] | null> | undefined;
   @Output() onSave: EventEmitter<any> = new EventEmitter();
 
   ngOnInit() {
-    this.initExercizes();
+    this.initexercises();
   }
 
-  private initExercizes() {
+  private initexercises() {
     if (this.workoutPlan?.workoutDays[this.day]?.exercises?.length == 0) {
       return;
     }
   }
 
-  public exerciseList: Exercize[] = [];
+  public exerciseList: Exercise[] = [];
   public addExercise() {
     if (!this.exercises?.value) {
       let workout = new WorkoutDay();
-      let exerciseList = [new Exercize()];
+      let exerciseList = [new Exercise()];
       workout.day = this.day;
       workout.exercises = exerciseList;
       this.workoutPlan?.workoutDays.push(workout);
       this.exercises?.setValue(exerciseList);
     } else {
-      this.exercises?.value?.push(new Exercize());
+      this.exercises?.value?.push(new Exercise());
     }
   }
 

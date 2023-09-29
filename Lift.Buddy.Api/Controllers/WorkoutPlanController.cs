@@ -1,5 +1,4 @@
 ﻿using Lift.Buddy.API.Interfaces;
-using Lift.Buddy.Core.Database.Entities;
 using Lift.Buddy.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -29,7 +28,7 @@ namespace Lift.Buddy.API.Controllers
             return Ok(res);
         }
 
-        [HttpGet("CreatedBy/{username}")]
+        [HttpGet("created-by/{username}")]
         public async Task<IActionResult> GetWorkoutsCreatedBy(string username)
         {
             var response = await _workoutScheduleService.GetWorkoutPlanCreatedByUser(username);

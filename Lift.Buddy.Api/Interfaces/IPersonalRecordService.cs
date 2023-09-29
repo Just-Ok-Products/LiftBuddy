@@ -1,12 +1,11 @@
-﻿using Lift.Buddy.Core.Database.Entities;
-using Lift.Buddy.Core.Models;
+﻿using Lift.Buddy.Core.Models;
 
 namespace Lift.Buddy.API.Interfaces
 {
     public interface IPersonalRecordService
     {
-        Task<Response<PersonalRecord>> GetByUsername(string username);
-        Task<Response<PersonalRecord>> AddPersonalRecord(PersonalRecordDTO userPR);
-        Task<Response<PersonalRecord>> UpdatePersonalRecord(PersonalRecordDTO userPR);
+        Task<Response<PersonalRecordDTO>> GetByUsername(string username);
+        Task<Response<PersonalRecordDTO>> AddPersonalRecord(PersonalRecordDTO userPR);
+        Task<Response<PersonalRecordDTO>> UpdatePersonalRecord(PersonalRecordDTO userPR);
     }
 }

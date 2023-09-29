@@ -9,7 +9,6 @@ export class LoginContainerComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
-  }
-
+  ngOnInit() { }
+  
 }

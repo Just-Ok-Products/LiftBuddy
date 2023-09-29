@@ -49,7 +49,7 @@ import { UserDataFormComponent } from './Pages/UserData/Components/user-data-for
 import { PrComponent } from './Pages/PR/pr.component';
 import { PrMenuComponent } from './Pages/PR/Components/pr-menu/pr-menu.component';
 import { PrExerciseComponent } from './Pages/PR/Components/pr-exercise/pr-exercise.component';
-import { PrService } from './Services/pr.service';
+import { PersonalRecordService } from './Services/pr.service';
 import { TrainingCardComponent } from './Pages/WorkoutPlans/Components/your-workouts-page/Components/training-card/training-card.component';
 import { MyWorkoutsComponent } from './Pages/WorkoutPlans/Components/my-workouts/my-workouts.component';
 import { DialogService } from './Services/Utils/dialog.service';
@@ -101,7 +101,7 @@ import { NavigationPageCardComponent } from './Pages/Home/Components/navigation-
     LoginModule,
     PageNotFoundModule
   ],
-  providers: [LoginService, ApiCallsService, PrService, DialogService],
+  providers: [LoginService, ApiCallsService, PersonalRecordService, DialogService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

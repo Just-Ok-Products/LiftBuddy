@@ -1,4 +1,4 @@
-export enum UnitOfMeasures {
+export enum UnitOfMeasure {
   KG = 'KG',
   LB = 'LB'
 }

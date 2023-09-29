@@ -1,11 +1,11 @@
-import { ExercizeType } from "./Enums/ExercizeType";
-import { UnitOfMeasures } from "./Enums/UnitOfMeasures";
+import { ExerciseType } from "./Enums/ExerciseType";
+import { UnitOfMeasure } from "./Enums/UnitOfMeasures";
 
 export class PersonalRecord {
   public exerciseName: string = '';
   public series: number = 0;
   public reps: number = 0;
   public weight: number = 0;
-  public unitOfMeasure: string = UnitOfMeasures.KG;
-  public exercizeTipe: ExercizeType = ExercizeType.Weight;
+  public unitOfMeasure: string = UnitOfMeasure.KG;
+  public exerciseTipe: ExerciseType = ExerciseType.Weight;
 }

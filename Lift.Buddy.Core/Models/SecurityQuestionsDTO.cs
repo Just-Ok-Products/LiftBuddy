@@ -1,5 +1,3 @@
+﻿namespace Lift.Buddy.Core.Models;
 
-namespace Lift.Buddy.Core.Models
-{
-    public record SecurityQuestionDTO(string Question, string Answer);
-}
+public record SecurityQuestionDTO(string Question, string Answer);

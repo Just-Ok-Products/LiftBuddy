@@ -8,6 +8,7 @@ import { generalNavigationMenu } from 'src/app/routes';
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.css']
 })
+
 export class HomePageComponent implements OnInit {
 
   constructor(
@@ -19,9 +20,9 @@ export class HomePageComponent implements OnInit {
   }
 
   public routes = generalNavigationMenu;
-
   public usernameLoggedIn: string | undefined = this.loginService.currentUsername;
   public isLoggedIn: boolean = false;
+
   private initUserData() {
     if (ApiCallsService.jwtToken) {
       this.isLoggedIn = true;

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { UnitOfMeasures } from 'src/app/Model/Enums/UnitOfMeasures';
+import { UnitOfMeasure } from 'src/app/Model/Enums/UnitOfMeasures';
 import { PersonalRecord } from 'src/app/Model/PersonalRecord';
 
 @Component({
@@ -8,6 +8,7 @@ import { PersonalRecord } from 'src/app/Model/PersonalRecord';
   templateUrl: './pr-exercise.component.html',
   styleUrls: ['./pr-exercise.component.css']
 })
+
 export class PrExerciseComponent implements OnInit {
 
   @Input() exercise: PersonalRecord = new PersonalRecord();
@@ -16,12 +17,12 @@ export class PrExerciseComponent implements OnInit {
   public exerciseForm: FormGroup = new FormGroup({
     name: new FormControl(''),
     weight: new FormControl(0),
-    unitOfMeasure: new FormControl(UnitOfMeasures.KG)
+    unitOfMeasure: new FormControl(UnitOfMeasure.KG)
   });
 
   constructor() { }
 
-  public UOMs: UnitOfMeasures[] = []
+  public UOMs: UnitOfMeasure[] = []
 
   ngOnInit() {
     this.initFormValues();
@@ -36,8 +37,8 @@ export class PrExerciseComponent implements OnInit {
   }
 
   private initUOMs() {
-    this.UOMs.push(UnitOfMeasures.KG);
-    this.UOMs.push(UnitOfMeasures.LB);
+    this.UOMs.push(UnitOfMeasure.KG);
+    this.UOMs.push(UnitOfMeasure.LB);
   }
 
   private initDataBinding() {

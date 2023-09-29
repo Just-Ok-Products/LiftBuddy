@@ -3,7 +3,7 @@ import { WorkoutDay } from './../../../../Model/WorkoutDay';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Exercize } from 'src/app/Model/Exercise';
+import { Exercise } from 'src/app/Model/Exercise';
 import { WorkoutPlan } from 'src/app/Model/WorkoutPlan';
 import { SnackBarService } from 'src/app/Services/Utils/snack-bar.service';
 
@@ -93,7 +93,7 @@ export class CreateUpdateWorkoutplanPageComponent implements OnInit {
     this.workoutDayForm.controls['exercises'].setValue(exercises);
   }
 
-  public exercises = new FormControl<Exercize[]>([]);
+  public exercises = new FormControl<Exercise[]>([]);
   public workoutDayForm: FormGroup = new FormGroup({
     name: new FormControl(),
     trainingDay: new FormControl(0),

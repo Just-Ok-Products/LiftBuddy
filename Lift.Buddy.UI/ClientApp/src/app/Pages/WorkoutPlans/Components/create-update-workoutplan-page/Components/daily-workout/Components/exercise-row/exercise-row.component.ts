@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { tap } from 'rxjs';
-import { Exercize } from 'src/app/Model/Exercise';
+import { Exercise } from 'src/app/Model/Exercise';
 
 @Component({
   selector: 'app-exercise-row',
@@ -12,7 +12,7 @@ export class ExerciseRowComponent implements OnInit {
 
   constructor() { }
 
-  @Input() exercise: Exercize | undefined
+  @Input() exercise: Exercise | undefined
   @Input() index: number | undefined
   @Output() onDelete: EventEmitter<any> = new EventEmitter();
   @Output() onChange: EventEmitter<any> = new EventEmitter();
