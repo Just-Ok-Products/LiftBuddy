@@ -1,7 +1,6 @@
 ﻿using Lift.Buddy.API.Interfaces;
 using Lift.Buddy.Core;
 using Lift.Buddy.Core.Database;
-using Lift.Buddy.Core.Database.Entities;
 using Lift.Buddy.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,43 +17,47 @@ namespace Lift.Buddy.API.Services
             _mapper = mapper;
         }
 
-        public async Task<Response<PersonalRecordDTO>> GetByUsername(string username)
+        public async Task<Response<PersonalRecordDTO>> GetByUserId(Guid userId)
         {
             var response = new Response<PersonalRecordDTO>();
 
             try
             {
-                if (string.IsNullOrEmpty(username)) throw new Exception("No username received");
+                var records = await _context.PersonalRecords
+                    .Where(r => r.UserId == userId)
+                    .Select(pr => _mapper.Map(pr))
+                    .ToArrayAsync();
 
-                var user = await _context.Users
-                    .SingleOrDefaultAsync(x => x.Username == username);
-
-
-                response.Body = user?.PersonalRecords
-                    .Select(pr => _mapper.Map(pr)) ?? Enumerable.Empty<PersonalRecordDTO>();
-
+                response.Body = records;
                 response.Result = true;
             }
             catch (Exception ex)
             {
-                response.Notes = Utils.ErrorMessage(nameof(GetByUsername), ex);
+                response.Notes = Utils.ErrorMessage(nameof(GetByUserId), ex);
                 response.Result = false;
             }
 
             return response;
         }
 
-        public async Task<Response<PersonalRecordDTO>> AddPersonalRecord(PersonalRecordDTO record)
+        public async Task<Response<PersonalRecordDTO>> AddPersonalRecord(
+            Guid userId,
+            IEnumerable<PersonalRecordDTO> records)
         {
             var response = new Response<PersonalRecordDTO>();
 
             try
             {
-                if (record == null) throw new Exception("No data received");
+                if (!records.Any()) throw new Exception("No data received");
 
-                var personalRecord = _mapper.Map(record);
+                var personalRecords = records.Select(r =>
+                {
+                    var record = _mapper.Map(r);
+                    record.UserId = userId;
+                    return record;
+                });
 
-                await _context.PersonalRecords.AddAsync(personalRecord);
+                await _context.PersonalRecords.AddRangeAsync(personalRecords);
 
                 if ((await _context.SaveChangesAsync()) < 1)
                 {
@@ -72,17 +75,24 @@ namespace Lift.Buddy.API.Services
             return response;
         }
 
-        public async Task<Response<PersonalRecordDTO>> UpdatePersonalRecord(PersonalRecordDTO record)
+        public async Task<Response<PersonalRecordDTO>> UpdatePersonalRecord(
+            Guid userId,
+            IEnumerable<PersonalRecordDTO> records)
         {
             var response = new Response<PersonalRecordDTO>();
 
             try
             {
-                if (record == null) throw new Exception("No data received");
+                if (!records.Any()) throw new Exception("No data received");
 
-                var personalRecord = _mapper.Map(record);
+                var personalRecords = records.Select(r =>
+                {
+                    var record = _mapper.Map(r);
+                    record.UserId = userId;
+                    return record;
+                });
 
-                _context.PersonalRecords.Update(personalRecord);
+                _context.PersonalRecords.UpdateRange(personalRecords);
 
                 if ((await _context.SaveChangesAsync()) < 1)
                 {

@@ -2,14 +2,10 @@ using Lift.Buddy.API.Interfaces;
 using Lift.Buddy.API.Services;
 using Lift.Buddy.Core;
 using Lift.Buddy.Core.Database;
-using Microsoft.AspNetCore.Http.Json;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);

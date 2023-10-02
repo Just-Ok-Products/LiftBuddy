@@ -19,19 +19,19 @@ namespace Lift.Buddy.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var res = string.IsNullOrEmpty(username)
-                ? await _workoutScheduleService.GetWorkoutPlans()
-                : await _workoutScheduleService.GetUserWorkoutPlans(username);
+            if (userId is null)
+                return NotFound();
 
+            var res = await _workoutScheduleService.GetUserWorkoutPlans(Guid.Parse(userId));
             return Ok(res);
         }
 
         [HttpGet("created-by/{username}")]
-        public async Task<IActionResult> GetWorkoutsCreatedBy(string username)
+        public async Task<IActionResult> GetWorkoutsCreatedBy(Guid userId)
         {
-            var response = await _workoutScheduleService.GetWorkoutPlanCreatedByUser(username);
+            var response = await _workoutScheduleService.GetWorkoutPlanCreatedByUser(userId);
             return Ok(response);
         }
 
@@ -69,12 +69,9 @@ namespace Lift.Buddy.API.Controllers
         }
 
         [HttpPut("review")]
-        public async Task<IActionResult> ReviewWorkouPlan(
-            [FromBody] Guid workoutPlanId,
-            [FromBody] int stars
-            )
+        public async Task<IActionResult> ReviewWorkouPlan([FromBody] WorkoutPlanDTO workoutPlan)
         {
-            var response = await _workoutScheduleService.ReviewWorkoutPlan(workoutPlanId, stars);
+            var response = await _workoutScheduleService.ReviewWorkoutPlan(workoutPlan);
             if (!response.Result)
             {
                 return Ok(response);

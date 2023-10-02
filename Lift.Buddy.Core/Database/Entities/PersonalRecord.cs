@@ -12,5 +12,7 @@ public class PersonalRecord
 
     public Guid ExerciseId { get; set; }
     public virtual Exercise Exercise { get; set; }
+
+    public Guid UserId { get; set; }
     public virtual User User { get; set; }
 }

@@ -27,5 +27,8 @@
 </ng-template>
 
 <ng-template #rightMenu>
-  <app-pr-menu (onAddexercise)="addexercise()" (onSave)="save()"></app-pr-menu>
+  <app-pr-menu
+    (onAddexercise)="addExercise()"
+    (onSave)="update()"
+  ></app-pr-menu>
 </ng-template>

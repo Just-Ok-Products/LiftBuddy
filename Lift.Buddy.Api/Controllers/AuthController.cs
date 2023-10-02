@@ -27,8 +27,12 @@ namespace Lift.Buddy.API.Controllers
         [Authorize]
         public async Task<IActionResult> GetUserData()
         {
-            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
-            var response = await _loginService.GetUserData(username);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId is null)
+                return NotFound();
+
+            var response = await _loginService.GetUserData(Guid.Parse(userId));
             return Ok(response);
         }
 
@@ -36,7 +40,7 @@ namespace Lift.Buddy.API.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateUserData([FromBody] UserDTO userData)
         {
-            var response = await _loginService.UpdateUserData(userData);
+            await _loginService.UpdateUserData(userData);
             return NoContent();
         }
         #endregion
@@ -50,22 +54,21 @@ namespace Lift.Buddy.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] Credentials loginCredentials)
+        public async Task<IActionResult> Login([FromBody] Credentials credentials)
         {
-            var success = await _loginService.CheckCredentials(loginCredentials);
+            var (id, success) = await _loginService.CheckCredentials(credentials);
             if (!success)
-            {
                 return Unauthorized();
-            }
+
             var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["Authentication:SecretForKey"] ?? ""));
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var claimsForToken = new List<Claim>
+            var claimsForToken = new Claim[]
             {
-                new Claim("sub", loginCredentials.Username)
+                new Claim("sub", id.ToString())
             };
 
-            var jwtSecurityToken = new JwtSecurityToken(
+            var jwtDefinition = new JwtSecurityToken(
                 _configuration["Authentication:Issuer"],
                 _configuration["Authentication:Audience"],
                 claimsForToken,
@@ -74,18 +77,13 @@ namespace Lift.Buddy.API.Controllers
                 signingCredentials
                 );
 
-            var tokenToReturn = new JwtSecurityTokenHandler()
-                .WriteToken(jwtSecurityToken);
-
-            var tokens = new List<string>
-            {
-                tokenToReturn
-            };
+            var token = new JwtSecurityTokenHandler()
+                .WriteToken(jwtDefinition);
 
             var res = new Response<string>
             {
                 Result = true,
-                Body = tokens,
+                Body = new string[] { token },
                 Notes = ""
             };
 
@@ -93,9 +91,9 @@ namespace Lift.Buddy.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] UserDTO registrationCredentials)
+        public async Task<IActionResult> Register([FromBody] UserDTO user)
         {
-            var response = await _loginService.RegisterUser(registrationCredentials);
+            var response = await _loginService.RegisterUser(user);
             if (!response.Result)
             {
                 return Ok(response);
@@ -103,7 +101,7 @@ namespace Lift.Buddy.API.Controllers
             return NoContent();
         }
 
-        [HttpPost("changePassword")]
+        [HttpPost("change-password")]
         public async Task<IActionResult> ChangePassword([FromBody] Credentials loginCredentials)
         {
             var response = await _loginService.ChangePassword(loginCredentials);

@@ -5,6 +5,7 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
   templateUrl: './pr-menu.component.html',
   styleUrls: ['./pr-menu.component.css']
 })
+
 export class PrMenuComponent implements OnInit {
 
   @Output() onAddExercise: EventEmitter<void> = new EventEmitter();
@@ -22,5 +23,4 @@ export class PrMenuComponent implements OnInit {
   public save() {
     this.onSave.emit();
   }
-
 }

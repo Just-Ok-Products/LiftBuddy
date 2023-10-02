@@ -1,6 +1,10 @@
-export class SecurityQuestions {
+export class SecurityQuestion {
 
-  public questions: string[] = [];
+    constructor(question: string, answer: string) {
+        this.question = question;
+        this.answer = answer;
+    }
 
-  public answers: string[] = [];
+    public question: string
+    public answer: string
 }

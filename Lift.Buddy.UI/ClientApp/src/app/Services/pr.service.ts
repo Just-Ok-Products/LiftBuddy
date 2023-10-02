@@ -3,28 +3,30 @@ import { ApiCallsService } from './Utils/api-calls.service';
 import { PersonalRecord } from '../Model/PersonalRecord';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 
 export class PersonalRecordService {
 
-  constructor(
-    private apiService: ApiCallsService
-  ) { }
+    private defaultUrl: string = 'api/PersonalRecord';
 
-  private defaultUrl: string = "api/PersonalRecord";
+    constructor(private apiService: ApiCallsService) { }
 
-  public get() {
-    const response = this.apiService.apiGet<PersonalRecord>(this.defaultUrl);
-    return response;
-  }
+    public get() {
+        return this.apiService.apiGet<PersonalRecord>(this.defaultUrl);
+    }
 
-  public addPersonalRecord(username: string, personalRecords: PersonalRecord[]) {
-    return this.apiService.apiPost<PersonalRecord>(this.defaultUrl, { username, personalRecords});
-}
+    public addPersonalRecord(userId: string, personalRecords: PersonalRecord[]) {
+        return this.apiService.apiPost<PersonalRecord>(this.defaultUrl, {
+            userId,
+            personalRecords,
+        });
+    }
 
-  public updatePersonalRecord(username: string, personalRecords: PersonalRecord[]) {
-      return this.apiService.apiPut<PersonalRecord>(this.defaultUrl, { username, personalRecords});
-  }
-
+    public updatePersonalRecord(userId: string, personalRecords: PersonalRecord[]) {
+        return this.apiService.apiPut<PersonalRecord>(this.defaultUrl, {
+            userId,
+            personalRecords,
+        });
+    }
 }

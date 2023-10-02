@@ -1,35 +1,41 @@
-
 <mat-card>
   <mat-card-header>
     <div class="row">
-      <img class="col-3" src="../../../assets/Logo-no-bg.png"/>
+      <img class="col-3" src="../../../assets/Logo-no-bg.png" />
       <mat-card-title class="col-2">Register</mat-card-title>
     </div>
   </mat-card-header>
   <mat-card-content>
     <form [formGroup]="form">
-      <div style="display: flex;" *ngFor="let item of items">
+      <div style="display: flex" *ngFor="let item of items">
         <mat-form-field>
           <mat-label>Security question</mat-label>
           <mat-select [formControlName]="'question' + item">
-            <mat-option *ngFor="let question of questions" [value]="question">{{question}}</mat-option>
+            <mat-option *ngFor="let question of questions" [value]="question">{{
+              question
+            }}</mat-option>
           </mat-select>
-          <mat-error *ngIf="form.controls['question' + item].errors?.['required']">This field is required</mat-error>
+          <mat-error
+            *ngIf="form.controls['question' + item].errors?.['required']"
+            >This field is required</mat-error
+          >
         </mat-form-field>
-        <div style="width: 5%;"></div>
+        <div style="width: 5%"></div>
         <mat-form-field>
           <mat-label>Reply</mat-label>
-          <input matInput [formControlName]="'response' + item"/>
-          <mat-error *ngIf="form.controls['response' + item].errors?.['required']">This field is required</mat-error>
+          <input matInput [formControlName]="'response' + item" />
+          <mat-error
+            *ngIf="form.controls['response' + item].errors?.['required']"
+            >This field is required</mat-error
+          >
         </mat-form-field>
       </div>
     </form>
-
   </mat-card-content>
   <mat-card-actions align="end">
     <button mat-button (click)="back()">Back</button>
 
-    <div style="width: 100%;"></div>
+    <div style="width: 100%"></div>
 
     <button mat-button color="primary" (click)="register()">Confirm</button>
   </mat-card-actions>

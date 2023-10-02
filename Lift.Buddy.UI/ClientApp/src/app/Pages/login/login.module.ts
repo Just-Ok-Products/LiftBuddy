@@ -1,8 +1,8 @@
 import { MatCardModule } from '@angular/material/card';
 import { NgModule } from "@angular/core";
-import { LoginPageComponent } from "./Components/login-page/login-page.component";
+import { LoginPageComponent } from './Components/login-page/login-page.component';
 import { LoginContainerComponent } from "./login.component";
-import { RegisterPageComponent } from "./Components/register-page/register-page.component";
+import { RegisterPageComponent } from './Components/register-page/register-page.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { RouterModule } from '@angular/router';
@@ -18,28 +18,28 @@ import { MatSelectModule } from '@angular/material/select';
 import { UIElementsModule } from '../Components/UI.Elements.module';
 
 @NgModule({
-  imports: [
-    BrowserModule,
-    MatCardModule,
-    ReactiveFormsModule,
-    FormsModule,
-    MatFormFieldModule,
-    RouterModule,
-    MatOptionModule,
-    MatButtonModule,
-    MatInputModule,
-    MatIconModule,
-    MatSelectModule,
-    UIElementsModule
-  ],
-  declarations: [
-    LoginPageComponent,
-    LoginContainerComponent,
-    RegisterPageComponent,
-    ForgotPasswordPageComponent,
-    UserInformationComponent,
-    SecurityQuestionsComponent
-  ],
-  bootstrap: []
+    imports: [
+        BrowserModule,
+        MatCardModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatFormFieldModule,
+        RouterModule,
+        MatOptionModule,
+        MatButtonModule,
+        MatInputModule,
+        MatIconModule,
+        MatSelectModule,
+        UIElementsModule
+    ],
+    declarations: [
+        LoginPageComponent,
+        LoginContainerComponent,
+        RegisterPageComponent,
+        ForgotPasswordPageComponent,
+        UserInformationComponent,
+        SecurityQuestionsComponent
+    ],
+    bootstrap: []
 })
 export class LoginModule { }

@@ -41,10 +41,10 @@ namespace Lift.Buddy.API.Services
             return response;
         }
 
-        public async Task<bool> CheckCredentials(Credentials credentials)
+        public async Task<(Guid UserId, bool IsValid)> CheckCredentials(Credentials credentials)
         {
             if (!credentials.HasValues())
-                return false;
+                return (Guid.Empty, false);
 
             var username = credentials.Username;
 
@@ -53,7 +53,7 @@ namespace Lift.Buddy.API.Services
             if (user == null) throw new KeyNotFoundException($"User '{username}' doesn't exist");
 
             var hashedPwd = Utils.HashString(credentials.Password); // userei un servizio separato che si occupa solo di hash e fare il controllo
-            return hashedPwd == user.Password;
+            return (user.UserId, hashedPwd == user.Password);
         }
 
         public async Task<Response<UserDTO>> RegisterUser(UserDTO user)
@@ -63,6 +63,7 @@ namespace Lift.Buddy.API.Services
             try
             {
                 var newUser = _mapper.Map(user);
+                newUser.UserId = Guid.NewGuid();
 
                 await _context.Users.AddAsync(newUser);
                 if ((await _context.SaveChangesAsync()) == 0)
@@ -112,15 +113,15 @@ namespace Lift.Buddy.API.Services
         }
 
         #region User Data
-        public async Task<Response<UserDTO>> GetUserData(string username)
+        public async Task<Response<UserDTO>> GetUserData(Guid userId)
         {
             var response = new Response<UserDTO>();
 
             try
             {
-                var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == username);
+                var user = await _context.Users.FirstOrDefaultAsync(x => x.UserId == userId);
 
-                if (user == null) throw new KeyNotFoundException($"User '{username}' doesn't exist");
+                if (user == null) throw new KeyNotFoundException($"User '{userId}' doesn't exist");
 
                 var userData = _mapper.Map(user);
 
@@ -148,6 +149,8 @@ namespace Lift.Buddy.API.Services
 
                 if (user == null) throw new KeyNotFoundException($"User '{userData.Credentials.Username}' doesn't exist");
 
+                // TODO check che i campi non diventino vuoti
+                user.Username = userData.Userame;
                 user.Surname = userData.Surname;
                 user.Name = userData.Name;
                 user.Email = userData.Email;

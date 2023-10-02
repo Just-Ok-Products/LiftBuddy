@@ -37,8 +37,7 @@ export class PrExerciseComponent implements OnInit {
   }
 
   private initUOMs() {
-    this.UOMs.push(UnitOfMeasure.KG);
-    this.UOMs.push(UnitOfMeasure.LB);
+    this.UOMs.push(UnitOfMeasure.KG, UnitOfMeasure.LB);
   }
 
   private initDataBinding() {

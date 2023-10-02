@@ -5,42 +5,42 @@ import { SnackBarService } from 'src/app/Services/Utils/snack-bar.service';
 import { WorkoutplanService } from 'src/app/Services/workoutplan.service';
 
 @Component({
-  selector: 'app-your-workouts-page',
-  templateUrl: './your-workouts-page.component.html',
-  styleUrls: ['./your-workouts-page.component.css']
+    selector: 'app-your-workouts-page',
+    templateUrl: './your-workouts-page.component.html',
+    styleUrls: ['./your-workouts-page.component.css']
 })
+
 export class YourWorkoutsPageComponent implements OnInit {
 
-  constructor(
-    private workoutplanService: WorkoutplanService,
-    private snackbarService: SnackBarService,
-  ) { }
+    public workouts: WorkoutPlan[] | undefined;
+    public dailyWorkouts: { workout: WorkoutDay, name: string }[] = []
 
-  async ngOnInit() {
-    await this.initUserWorkouts()
-  }
+    constructor(
+        private workoutplanService: WorkoutplanService,
+        private snackbarService: SnackBarService,
+    ) { }
 
-  public workouts: WorkoutPlan[] | undefined;
-  public dailyWorkouts: {workout: WorkoutDay, name: string}[]  = []
-
-  private async initUserWorkouts() {
-    const workoutsResp = await this.workoutplanService.getWorkoutPlanByUser();
-
-    if (!workoutsResp.result) {
-      this.snackbarService.operErrorSnackbar(`Failed to load workouts due to: ${workoutsResp.notes}`)
+    async ngOnInit() {
+        await this.initUserWorkouts()
     }
 
-    this.workouts = workoutsResp.body;
+    private async initUserWorkouts() {
+        const response = await this.workoutplanService.getWorkoutPlanByUser();
 
-    const dayNumber = new Date().getDay();
+        if (!response.result) {
+            this.snackbarService.operErrorSnackbar(`Failed to load workouts due to: ${response.notes}`)
+        }
 
-    workoutsResp.body.forEach(workout => {
-      const workoutDay = workout.workoutDays.find(x => x.day == dayNumber);
-      if (workoutDay != undefined) {
-        this.dailyWorkouts.push({workout: workoutDay, name: workout.name});
-      }
-    });
+        this.workouts = response.body;
+        const dayNumber = new Date().getDay();
 
-  }
+        response.body.forEach(workout => {
+            const workoutDay = workout.workoutDays.find(x => x.day == dayNumber);
+            if (workoutDay != undefined) {
+                this.dailyWorkouts.push({ workout: workoutDay, name: workout.name });
+            }
+        });
+
+    }
 
 }

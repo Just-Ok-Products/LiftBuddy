@@ -12,5 +12,5 @@ public class Credentials
     public string Password { get; set; } = "";
 
     public bool HasValues()
-        => string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Username);
+        => !string.IsNullOrEmpty(Username) || !string.IsNullOrEmpty(Password);
 }
