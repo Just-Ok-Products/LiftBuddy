@@ -32,6 +32,8 @@ export class LoginService {
     return response;
   }
 
+  public currentUsername: string = "";
+  public isTrainer: boolean = true; //TODO: update this variable with info after login
   public async login(loginCredentials: LoginCredetials) {
     const response = await this.apiCalls.apiPost<string>(this.defaultUrl, loginCredentials);
 
@@ -53,7 +55,6 @@ export class LoginService {
     return true;
   }
 
-  public currentUsername: string = "";
   public async changePassword(loginCredential: LoginCredetials) {
     const response = await this.apiCalls.apiPost<LoginCredetials>(this.defaultUrl + '/changePassword', loginCredential);
     return response;

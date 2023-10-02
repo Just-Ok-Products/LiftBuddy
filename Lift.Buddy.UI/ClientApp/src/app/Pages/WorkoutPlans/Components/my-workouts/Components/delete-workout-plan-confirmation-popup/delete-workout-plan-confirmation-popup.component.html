@@ -1,10 +1,7 @@
-<mat-card>
-    <mat-card-header>
-        <mat-card-title>Are you sure to delete {{workout.name}}?</mat-card-title>
-    </mat-card-header>
-    <mat-card-actions align="end">
-      <button mat-button (click)="cancel()">Cancel</button>
-      <button mat-button color="warn" (click)="delete()">Delete</button>
-
-    </mat-card-actions>
-</mat-card>
+<app-confirmation-dialog
+  [action]="'Are you sure to delete ' + workout.name + '?'"
+  confirmButtonName="Delete"
+  cancelButtonName="Cancel"
+  (confirmFunction)="delete()"
+  (cancelFunction)="cancel()"
+></app-confirmation-dialog>

@@ -1,0 +1,9 @@
+<mat-card>
+  <mat-card-header>
+      <mat-card-title>{{action}}</mat-card-title>
+  </mat-card-header>
+  <mat-card-actions align="end">
+    <button mat-button (click)="cancelFunction.emit()">{{cancelButtonName}}</button>
+    <button mat-button color="warn" (click)="confirmFunction.emit()">{{confirmButtonName}}</button>
+  </mat-card-actions>
+</mat-card>

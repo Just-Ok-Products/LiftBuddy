@@ -1,6 +1,6 @@
 import { PersonalRecord } from "./PersonalRecord";
 
-export class UserPR {
+export class UserPersonalRecord {
   public username: string = '';
   public personalRecords: PersonalRecord[] = [];
 }

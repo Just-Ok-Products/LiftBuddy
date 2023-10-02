@@ -29,6 +29,8 @@ namespace Lift.Buddy.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] UserPersonalRecord userRecord)
         {
+            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+            userRecord.Username = username;
             var response = await _recordService.AddPersonalRecord(userRecord);
             return Ok(response);
         }
@@ -36,6 +38,8 @@ namespace Lift.Buddy.API.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UserPersonalRecord userRecord)
         {
+            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+            userRecord.Username = username;
             var response = await _recordService.UpdatePersonalRecord(userRecord);
             return Ok(response);
         }

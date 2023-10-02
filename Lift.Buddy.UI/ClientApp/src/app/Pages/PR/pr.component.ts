@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { PersonalRecord } from 'src/app/Model/PersonalRecord';
-import { UserPR } from 'src/app/Model/UserPR';
+import { UserPersonalRecord } from 'src/app/Model/UserPersonalRecord';
 import { SnackBarService } from 'src/app/Services/Utils/snack-bar.service';
 import { PrService } from 'src/app/Services/pr.service';
 
@@ -47,7 +47,7 @@ export class PrComponent implements OnInit {
   }
 
   public async save() {
-    let userPR = new UserPR();
+    let userPR = new UserPersonalRecord();
 
     userPR.personalRecords = this.prForm.controls['exercizes'].value;
 
