@@ -57,7 +57,6 @@ export class ApiCallsService {
     private async apiGenericPost<T>(url: string, body: object, type: string): Promise<Response<T>> {
         let apiResponse = new Response<T>();
         try {
-            console.log(JSON.stringify(body))
             const response = await fetch(this.apiUrl + url,
                 {
                     method: type,

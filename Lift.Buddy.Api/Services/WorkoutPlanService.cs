@@ -101,9 +101,6 @@ namespace Lift.Buddy.API.Services
                 var workoutPlans = await _context.WorkoutPlans
                     .Where(x => x.Creator.UserId == userId)
                     .ToArrayAsync();
-                System.Console.WriteLine(userId);
-                System.Console.WriteLine("here");
-                System.Console.WriteLine(workoutPlans.Length);
                 response.Body = workoutPlans.Select(p => _mapper.Map(p));
                 response.Result = true;
             }
@@ -182,11 +179,7 @@ namespace Lift.Buddy.API.Services
                 plan.Creator = await _context.Users
                     .SingleOrDefaultAsync(u => u.UserId == plan.CreatorId);
 
-                _context.Attach(plan);
                 await _context.WorkoutPlans.AddAsync(plan);
-
-                System.Console.WriteLine(plan.CreatorId);
-                System.Console.WriteLine(plan.Creator?.UserId);
 
                 if ((await _context.SaveChangesAsync()) < 1)
                 {
