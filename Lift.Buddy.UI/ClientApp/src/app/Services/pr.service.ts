@@ -16,17 +16,11 @@ export class PersonalRecordService {
         return this.apiService.apiGet<PersonalRecord>(this.defaultUrl);
     }
 
-    public addPersonalRecord(userId: string, personalRecords: PersonalRecord[]) {
-        return this.apiService.apiPost<PersonalRecord>(this.defaultUrl, {
-            userId,
-            personalRecords,
-        });
+    public addPersonalRecord(personalRecords: PersonalRecord[]) {
+        return this.apiService.apiPost<PersonalRecord[]>(this.defaultUrl, personalRecords);
     }
 
-    public updatePersonalRecord(userId: string, personalRecords: PersonalRecord[]) {
-        return this.apiService.apiPut<PersonalRecord>(this.defaultUrl, {
-            userId,
-            personalRecords,
-        });
+    public updatePersonalRecord(personalRecords: PersonalRecord[]) {
+        return this.apiService.apiPut<PersonalRecord[]>(this.defaultUrl, personalRecords);
     }
 }

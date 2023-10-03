@@ -4,12 +4,11 @@ namespace Lift.Buddy.Core.Models
 {
     public class WorkoutPlanDTO
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
         public string Name { get; set; }
-        public int ReviewsStars { get; set; } = 0;
-        public int ReviewAverage { get; set; } = 0;
-
-        public UserDTO Creator { get; set; }
+        public int ReviewsCount { get; set; } = 0;
+        public float ReviewAverage { get; set; } = 0;
+        public Guid CreatorId { get; set; }
         public IEnumerable<WorkoutDayDTO> WorkoutDays { get; set; } = Enumerable.Empty<WorkoutDayDTO>();
 
         public Document ToPDF()

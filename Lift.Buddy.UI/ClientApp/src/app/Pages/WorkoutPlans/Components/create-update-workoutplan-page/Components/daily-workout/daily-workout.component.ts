@@ -22,10 +22,10 @@ export class DailyWorkoutComponent implements OnInit {
     constructor() { }
 
     ngOnInit() {
-        this.initexercises();
+        this.initExercises();
     }
 
-    private initexercises() {
+    private initExercises() {
         if (this.workoutPlan?.workoutDays[this.day]?.exercises?.length == 0) {
             return;
         }
@@ -45,6 +45,7 @@ export class DailyWorkoutComponent implements OnInit {
         } else {
             this.exercises?.value?.push(new Exercise());
         }
+
     }
 
     public save() {

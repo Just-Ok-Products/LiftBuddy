@@ -26,15 +26,16 @@ export class ExerciseRowComponent implements OnInit {
 
     private initFormValues() {
         this.exerciseForm.controls['name'].setValue(this.exercise?.name ?? '');
-        this.exerciseForm.controls['reps'].setValue(this.exercise?.reps ?? 1);
+        this.exerciseForm.controls['reps'].setValue(this.exercise?.repetitions ?? 1);
         this.exerciseForm.controls['series'].setValue(this.exercise?.series ?? 1);
         this.exerciseForm.controls['rest'].setValue(this.exercise?.rest ?? 0);
+
         this.exerciseForm.controls['name'].valueChanges.pipe(
             tap((name: string) => this.exercise!.name = name)
         ).subscribe();
 
         this.exerciseForm.controls['reps'].valueChanges.pipe(
-            tap((repetitions: number) => this.exercise!.reps = repetitions)
+            tap((repetitions: number) => this.exercise!.repetitions = repetitions)
         ).subscribe();
 
         this.exerciseForm.controls['series'].valueChanges.pipe(
@@ -55,10 +56,9 @@ export class ExerciseRowComponent implements OnInit {
 
     public updateExercise() {
         this.exercise!.name = this.exerciseForm.controls['name'].value;
-        this.exercise!.reps = this.exerciseForm.controls['reps'].value;
+        this.exercise!.repetitions = this.exerciseForm.controls['reps'].value;
         this.exercise!.series = this.exerciseForm.controls['series'].value;
         this.exercise!.rest = this.exerciseForm.controls['rest'].value;
-
     }
 
     public remove() {

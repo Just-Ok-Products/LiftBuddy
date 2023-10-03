@@ -57,6 +57,7 @@ export class ApiCallsService {
     private async apiGenericPost<T>(url: string, body: object, type: string): Promise<Response<T>> {
         let apiResponse = new Response<T>();
         try {
+            console.log(JSON.stringify(body))
             const response = await fetch(this.apiUrl + url,
                 {
                     method: type,
@@ -72,7 +73,8 @@ export class ApiCallsService {
             }
 
             if (response.status != 204) {
-                const result = (await response.json()) as Response<T>;
+                const data = await response.json();
+                const result = data as Response<T>;
                 return result;
             }
 

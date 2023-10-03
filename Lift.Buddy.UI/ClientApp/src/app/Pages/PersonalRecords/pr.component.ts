@@ -14,7 +14,6 @@ import { PersonalRecordService } from 'src/app/Services/pr.service';
 export class PersonalRecordComponent implements OnInit {
 
     constructor(
-        private loginService: LoginService,
         private personalRecordService: PersonalRecordService,
         private snackbarService: SnackBarService
     ) { }
@@ -28,28 +27,39 @@ export class PersonalRecordComponent implements OnInit {
     });
 
     private async initUserPersonalRecord() {
-        const prResp = await this.personalRecordService.get();
+        const response = await this.personalRecordService.get();
 
-        if (!prResp.result) {
-            this.snackbarService.operErrorSnackbar(`Failed to load PR. Error ${prResp.notes}`)
+        if (!response.result) {
+            this.snackbarService.operErrorSnackbar(`Failed to load PR. Error ${response.notes}`)
             return;
         }
 
-        if (prResp.body.length == 0) {
+        if (response.body.length == 0) {
             return;
         }
 
-        this.prForm.controls['exercises'].setValue(prResp.body[0]);
+        this.prForm.controls['exercises'].setValue(response.body);
     }
 
     public addExercise() {
         this.prForm.controls['exercises'].value.push(new PersonalRecord());
     }
 
-    public async update() {
-        let records = this.prForm.controls['exercises'].value;
+    public async add() {
+        const records = this.prForm.controls['exercises'].value;
+        const saveResp = await this.personalRecordService.addPersonalRecord(records);
 
-        const saveResp = await this.personalRecordService.updatePersonalRecord(this.loginService.user?.username!, records);
+        if (!saveResp.result) {
+            this.snackbarService.operErrorSnackbar(`An exception occurred during save. Ex ${saveResp.notes}`);
+            return;
+        }
+
+        this.snackbarService.openSuccessSnackbar('Personal results succesfully saved.')
+    }
+
+    public async update() {
+        const records = this.prForm.controls['exercises'].value;
+        const saveResp = await this.personalRecordService.updatePersonalRecord(records);
 
         if (!saveResp.result) {
             this.snackbarService.operErrorSnackbar(`An exception occurred during save. Ex ${saveResp.notes}`);

@@ -80,10 +80,12 @@ namespace Lift.Buddy.API.Controllers
             var token = new JwtSecurityTokenHandler()
                 .WriteToken(jwtDefinition);
 
+            // TODO: ritornare oggetto
+            System.Console.WriteLine(id.ToString());
             var res = new Response<string>
             {
                 Result = true,
-                Body = new string[] { token },
+                Body = new string[] { token, id.ToString() },
                 Notes = ""
             };
 

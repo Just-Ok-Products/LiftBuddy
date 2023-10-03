@@ -3,6 +3,7 @@ using System;
 using Lift.Buddy.Core.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Lift.Buddy.Core.Migrations
 {
     [DbContext(typeof(LiftBuddyContext))]
-    partial class LiftBuddyContextModelSnapshot : ModelSnapshot
+    [Migration("20231003142620_personal-record-no-exercise")]
+    partial class personalrecordnoexercise
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.9");
@@ -191,15 +194,15 @@ namespace Lift.Buddy.Core.Migrations
 
             modelBuilder.Entity("UserWorkoutPlan", b =>
                 {
-                    b.Property<Guid>("AssignedPlansWorkoutPlanId")
-                        .HasColumnType("TEXT");
-
                     b.Property<Guid>("UsersUserId")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("AssignedPlansWorkoutPlanId", "UsersUserId");
+                    b.Property<Guid>("WorkoutPlansWorkoutPlanId")
+                        .HasColumnType("TEXT");
 
-                    b.HasIndex("UsersUserId");
+                    b.HasKey("UsersUserId", "WorkoutPlansWorkoutPlanId");
+
+                    b.HasIndex("WorkoutPlansWorkoutPlanId");
 
                     b.ToTable("UserWorkoutPlan");
                 });
@@ -255,15 +258,15 @@ namespace Lift.Buddy.Core.Migrations
 
             modelBuilder.Entity("UserWorkoutPlan", b =>
                 {
-                    b.HasOne("Lift.Buddy.Core.Database.Entities.WorkoutPlan", null)
-                        .WithMany()
-                        .HasForeignKey("AssignedPlansWorkoutPlanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Lift.Buddy.Core.Database.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UsersUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Lift.Buddy.Core.Database.Entities.WorkoutPlan", null)
+                        .WithMany()
+                        .HasForeignKey("WorkoutPlansWorkoutPlanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

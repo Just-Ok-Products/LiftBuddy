@@ -3,17 +3,17 @@ import { NavigationMenu } from 'src/app/Model/NavigationMenu';
 import { workoutNavigationMenu } from '../../../routes'
 
 @Component({
-  selector: 'app-workout-navigation-menu',
-  templateUrl: './workout-navigation-menu.component.html',
-  styleUrls: ['./workout-navigation-menu.component.css']
+    selector: 'app-workout-navigation-menu',
+    templateUrl: './workout-navigation-menu.component.html',
+    styleUrls: ['./workout-navigation-menu.component.css']
 })
+
 export class WorkoutNavigationMenuComponent implements OnInit {
 
-  constructor() { }
+    constructor() { }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
-  public navigationData: NavigationMenu[] = workoutNavigationMenu
-
+    public navigationData: NavigationMenu[] = workoutNavigationMenu
 }

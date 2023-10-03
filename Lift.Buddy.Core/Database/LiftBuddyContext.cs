@@ -29,9 +29,11 @@ public class LiftBuddyContext : DbContext
 
             entity.HasMany(u => u.SecurityQuestions)
                 .WithOne(s => s.User);
+
             entity.HasMany(u => u.PersonalRecords)
                 .WithOne(pr => pr.User);
-            entity.HasMany(u => u.WorkoutPlans)
+
+            entity.HasMany(u => u.AssignedPlans)
                 .WithMany(p => p.Users);
         });
 

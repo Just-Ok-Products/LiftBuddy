@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -78,9 +77,7 @@ builder.Services.AddDbContext<LiftBuddyContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("TestDatabase"));
 });
 
-builder.Services.AddControllers().AddJsonOptions(
-    opt => opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
-    );
+builder.Services.AddControllers().AddNewtonsoftJson();
 
 var app = builder.Build();
 

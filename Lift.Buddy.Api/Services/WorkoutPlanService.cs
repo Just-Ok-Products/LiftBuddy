@@ -43,7 +43,6 @@ namespace Lift.Buddy.API.Services
             return response;
         }
 
-
         public async Task<Response<WorkoutPlanDTO>> GetWorkoutPlanById(Guid id)
         {
             var response = new Response<WorkoutPlanDTO>();
@@ -51,6 +50,8 @@ namespace Lift.Buddy.API.Services
             try
             {
                 var workoutPlan = await _context.WorkoutPlans
+                    .Include(wp => wp.WorkoutDays)
+                        .ThenInclude(wd => wd.Exercises)
                     .SingleOrDefaultAsync(x => x.WorkoutPlanId == id);
 
                 if (workoutPlan == null) throw new Exception("The workplan does not exist in the database.");
@@ -77,7 +78,7 @@ namespace Lift.Buddy.API.Services
 
                 if (user == null) throw new Exception($"User with user ID '{userId} doesn't exists.");
 
-                var workoutPlans = user?.WorkoutPlans;
+                var workoutPlans = user?.AssignedPlans;
 
                 response.Result = true;
                 response.Body = workoutPlans?.Select(p => _mapper.Map(p));
@@ -97,11 +98,13 @@ namespace Lift.Buddy.API.Services
 
             try
             {
-                var workoutSchedules = await _context.WorkoutPlans
+                var workoutPlans = await _context.WorkoutPlans
                     .Where(x => x.Creator.UserId == userId)
                     .ToArrayAsync();
-
-                response.Body = workoutSchedules.Select(p => _mapper.Map(p));
+                System.Console.WriteLine(userId);
+                System.Console.WriteLine("here");
+                System.Console.WriteLine(workoutPlans.Length);
+                response.Body = workoutPlans.Select(p => _mapper.Map(p));
                 response.Result = true;
             }
             catch (Exception ex)
@@ -175,11 +178,15 @@ namespace Lift.Buddy.API.Services
 
             try
             {
-                System.Console.WriteLine(workoutPlan.Id);
-                System.Console.WriteLine(workoutPlan.Creator.Name);
-                System.Console.WriteLine(workoutPlan.Name);
+                var plan = _mapper.Map(workoutPlan);
+                plan.Creator = await _context.Users
+                    .SingleOrDefaultAsync(u => u.UserId == plan.CreatorId);
 
-                await _context.WorkoutPlans.AddAsync(_mapper.Map(workoutPlan));
+                _context.Attach(plan);
+                await _context.WorkoutPlans.AddAsync(plan);
+
+                System.Console.WriteLine(plan.CreatorId);
+                System.Console.WriteLine(plan.Creator?.UserId);
 
                 if ((await _context.SaveChangesAsync()) < 1)
                 {
@@ -269,7 +276,7 @@ namespace Lift.Buddy.API.Services
                 if (currentPlan == null)
                     throw new Exception($"Trying to review non existing workout plan with id {workoutPlan.Id}.");
 
-                currentPlan.ReviewAverage = CalculateMean(currentPlan.ReviewAverage, currentPlan.ReviewCount, workoutPlan.ReviewsStars);
+                currentPlan.ReviewAverage = CalculateMean(currentPlan.ReviewAverage, currentPlan.ReviewCount, workoutPlan.ReviewsCount);
                 currentPlan.ReviewCount++;
 
                 _context.WorkoutPlans.Update(currentPlan);

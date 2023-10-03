@@ -15,6 +15,7 @@ export class LoginService {
     private defaultUrl: string = "api/Auth";
     public currentUsername: string = "";
     public user: User | undefined;
+    public userId: string = "";
 
     constructor(private apiCalls: ApiCallsService) { }
 
@@ -31,8 +32,8 @@ export class LoginService {
 
         if (response.result) {
             ApiCallsService.jwtToken = response.body[0];
+            this.userId = response.body[1];
         }
-
         return response;
     }
 

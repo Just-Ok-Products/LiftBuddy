@@ -10,11 +10,11 @@ namespace Lift.Buddy.Core.Models;
 public class Response<T>
 {
     [JsonPropertyName("notes")]
-    public string? Notes { get; set; }
+    public string Notes { get; set; }
 
     [JsonPropertyName("result")]
     public bool Result { get; set; }
 
     [JsonPropertyName("body")]
-    public IEnumerable<T>? Body { get; set; }
+    public IEnumerable<T> Body { get; set; }
 }

@@ -34,16 +34,18 @@ export class MyWorkoutsComponent implements OnInit {
     }
 
     private async initWorkouts() {
-        const workoutPlanResp = await this.workoutplanService.getWorkoutPlansCreatedByUser(this.loginService.user?.id!);
-        if (!workoutPlanResp.result) {
-            this.snackbarService.operErrorSnackbar(`Failed ot load workouts due to: ${workoutPlanResp.notes}`)
+        const response = await this.workoutplanService.getWorkoutPlansCreatedByUser(this.loginService.userId);
+        if (!response.result) {
+            this.snackbarService.operErrorSnackbar(`Failed ot load workouts due to: ${response.notes}`)
         }
-        this.workouts = workoutPlanResp.body;
+
+        this.workouts = response.body;
         this.workouts.forEach(async workoutPlan => {
             const response = await this.workoutplanService.getWorkoutPlanSubscribersCount(workoutPlan);
             if (!response.result) {
                 this.snackbarService.operErrorSnackbar(`Failed to load number of people subscribed to ${workoutPlan.name}. Error ${response.notes}`)
             }
+
             const subscribersQuantity = response.body.pop() ?? 0;
             this.workoutPlanSubscribers.push(subscribersQuantity);
         });

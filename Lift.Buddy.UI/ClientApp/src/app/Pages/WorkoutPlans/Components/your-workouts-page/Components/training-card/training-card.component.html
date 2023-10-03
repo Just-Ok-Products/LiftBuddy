@@ -1,15 +1,22 @@
 <mat-card class="card">
-  <mat-card-title>{{name}}</mat-card-title>
+  <mat-card-title>{{ name }}</mat-card-title>
   <mat-card-content class="exercises">
-    <div
-      class="row g-0"
-      *ngFor="let exercise of workoutDay.exercises"
-    >
+    <div class="row g-0" *ngFor="let exercise of workoutDay.exercises">
       <mat-form-field class="col-7">
-        <textarea cdkTextareaAutosize="false" readonly="true" matInput [value]="exercise.name"></textarea>
+        <textarea
+          cdkTextareaAutosize="false"
+          readonly="true"
+          matInput
+          [value]="exercise.name"
+        ></textarea>
       </mat-form-field>
       <mat-form-field class="col-5">
-        <textarea cdkTextareaAutosize="false" readonly="true" matInput [value]="exercise.reps + 'x' + exercise.series"></textarea>
+        <textarea
+          cdkTextareaAutosize="false"
+          readonly="true"
+          matInput
+          [value]="exercise.repetitions + 'x' + exercise.series"
+        ></textarea>
       </mat-form-field>
     </div>
   </mat-card-content>

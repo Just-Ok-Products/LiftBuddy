@@ -21,6 +21,7 @@ public interface IDatabaseMapper
     WorkoutPlan Map(WorkoutPlanDTO workoutPlan);
 
     WorkoutDayDTO Map(WorkoutDay workoutDay);
+    WorkoutDay Map(WorkoutDayDTO workoutDay);
 }
 
 public class DatabaseMapper : IDatabaseMapper
@@ -42,7 +43,7 @@ public class DatabaseMapper : IDatabaseMapper
     {
         return new Exercise
         {
-            ExerciseId = exercise.Id,
+            ExerciseId = exercise.Id ?? Guid.NewGuid(),
             Name = exercise.Name,
             Series = exercise.Series,
             Repetitions = exercise.Repetitions,
@@ -56,17 +57,18 @@ public class DatabaseMapper : IDatabaseMapper
         var record = new PersonalRecordDTO
         {
             Id = personalRecord.PersonalRecordId,
+            ExerciseName = personalRecord.ExerciseName,
             Series = personalRecord.Series,
-            Reps = personalRecord.Reps,
-            Exercise = Map(personalRecord.Exercise)
+            Reps = personalRecord.Repetitions,
+            ExerciseType = personalRecord.ExerciseType
         };
 
-        if (personalRecord.Weight.HasValue && personalRecord.UOM.HasValue)
-        {
-            var amount = personalRecord.Weight.Value;
-            var uom = (UnitOfMeasure)personalRecord.UOM.Value;
-            record.Weight = new Weight(amount, uom);
-        }
+        // if (personalRecord.Weight.HasValue && personalRecord.UOM.HasValue)
+        // {
+        //     var amount = personalRecord.Weight.Value;
+        //     var uom = (UnitOfMeasure)personalRecord.UOM.Value;
+        //     record.Weight = new Weight(amount, uom);
+        // }
 
         return record;
     }
@@ -76,12 +78,12 @@ public class DatabaseMapper : IDatabaseMapper
         return new PersonalRecord
         {
             PersonalRecordId = personalRecord.Id ?? Guid.NewGuid(),
-            ExerciseName = personalRecord.Exercise.Name,
+            ExerciseName = personalRecord.ExerciseName,
             Series = personalRecord.Series,
-            Reps = personalRecord.Reps,
-            Weight = personalRecord.Weight?.Amount,
-            UOM = (int?)personalRecord.Weight?.UnitOfMeasure,
-            Exercise = Map(personalRecord.Exercise)
+            Repetitions = personalRecord.Reps,
+            Weight = personalRecord.Weight,
+            UOM = (int?)personalRecord.UnitOfMeasure,
+            ExerciseType = personalRecord.ExerciseType
         };
     }
 
@@ -129,16 +131,48 @@ public class DatabaseMapper : IDatabaseMapper
 
     public WorkoutPlanDTO Map(WorkoutPlan workoutPlan)
     {
-        throw new NotImplementedException();
+        return new WorkoutPlanDTO
+        {
+            Id = workoutPlan.WorkoutPlanId,
+            Name = workoutPlan.Name,
+            CreatorId = workoutPlan.CreatorId,
+            ReviewAverage = workoutPlan.ReviewAverage,
+            ReviewsCount = workoutPlan.ReviewCount,
+            WorkoutDays = workoutPlan.WorkoutDays.Select(d => Map(d))
+        };
     }
 
+    // ext.CreatedBy(u.id);
     public WorkoutPlan Map(WorkoutPlanDTO workoutPlan)
     {
-        throw new NotImplementedException();
+        return new WorkoutPlan
+        {
+            WorkoutPlanId = workoutPlan.Id ?? Guid.NewGuid(),
+            Name = workoutPlan.Name,
+            ReviewAverage = workoutPlan.ReviewAverage,
+            ReviewCount = workoutPlan.ReviewsCount,
+            WorkoutDays = workoutPlan.WorkoutDays.Select(d => Map(d)).ToArray(),
+            CreatorId = workoutPlan.CreatorId,
+        };
     }
 
     public WorkoutDayDTO Map(WorkoutDay workoutDay)
     {
-        throw new NotImplementedException();
+        return new WorkoutDayDTO
+        {
+            Id = workoutDay.Id,
+            Day = workoutDay.Day,
+            Exercises = workoutDay.Exercises.Select(e => Map(e))
+        };
+    }
+
+    public WorkoutDay Map(WorkoutDayDTO workoutDay)
+    {
+        return new WorkoutDay
+        {
+            Id = workoutDay.Id ?? Guid.NewGuid(),
+            Day = workoutDay.Day,
+            Exercises = workoutDay.Exercises.Select(e => Map(e)).ToArray(),
+        };
     }
 }

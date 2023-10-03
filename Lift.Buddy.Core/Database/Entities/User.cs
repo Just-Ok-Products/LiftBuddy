@@ -4,7 +4,7 @@ public class User
 {
     public User()
     {
-        WorkoutPlans = new HashSet<WorkoutPlan>();
+        AssignedPlans = new HashSet<WorkoutPlan>();
         CreatedPlans = new HashSet<WorkoutPlan>();
         PersonalRecords = new HashSet<PersonalRecord>();
         SecurityQuestions = new HashSet<SecurityQuestion>();
@@ -21,7 +21,7 @@ public class User
     public bool IsAdmin { get; set; } = false;
     public bool IsTrainer { get; set; } = false;
 
-    public virtual ICollection<WorkoutPlan> WorkoutPlans { get; set; }
+    public virtual ICollection<WorkoutPlan> AssignedPlans { get; set; }
     public virtual ICollection<WorkoutPlan> CreatedPlans { get; set; }
     public virtual ICollection<PersonalRecord> PersonalRecords { get; set; }
     public virtual ICollection<SecurityQuestion> SecurityQuestions { get; set; }
