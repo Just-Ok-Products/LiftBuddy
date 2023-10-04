@@ -36,10 +36,10 @@ import { HomePageComponent } from './Pages/Home/home-page.component';
 import { WorkoutPlansModule } from './Pages/WorkoutPlans/workout-plans.module';
 import { UserDataComponent } from './Pages/UserData/user-data.component';
 import { UserDataFormComponent } from './Pages/UserData/Components/user-data-form/user-data-form.component';
-import { PrComponent } from './Pages/PR/pr.component';
-import { PrMenuComponent } from './Pages/PR/Components/pr-menu/pr-menu.component';
-import { PrExerciseComponent } from './Pages/PR/Components/pr-exercise/pr-exercise.component';
-import { PrService } from './Services/pr.service';
+import { PersonalRecordComponent } from './Pages/PersonalRecords/pr.component';
+import { PrMenuComponent } from './Pages/PersonalRecords/Components/pr-menu/pr-menu.component';
+import { PrExerciseComponent } from './Pages/PersonalRecords/Components/pr-exercise/pr-exercise.component';
+import { PersonalRecordService } from './Services/pr.service';
 import { DialogService } from './Services/Utils/dialog.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SettingsModule } from './Pages/Settings/settings.module';
@@ -58,7 +58,7 @@ import { MyAthletesModule } from './Pages/My-athletes/my-athletes.module';
     HomePageComponent,
     UserDataComponent,
     UserDataFormComponent,
-    PrComponent,
+    PersonalRecordComponent,
     PrMenuComponent,
     PrExerciseComponent,
     NavigationPageCardComponent
@@ -94,7 +94,7 @@ import { MyAthletesModule } from './Pages/My-athletes/my-athletes.module';
     SearchModule,
     MyAthletesModule
   ],
-  providers: [LoginService, ApiCallsService, PrService, DialogService, LoadingVisualizationService],
+  providers: [LoginService, ApiCallsService, PersonalRecordService, DialogService, LoadingVisualizationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

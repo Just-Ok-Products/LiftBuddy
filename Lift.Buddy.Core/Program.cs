@@ -12,7 +12,7 @@ try
 
     var app = builder.Build();
 
-    var context = app.Services.GetRequiredService<DBContext>();
+    var context = app.Services.GetRequiredService<LiftBuddyContext>();
 
     context.Database.EnsureCreated();
     context.Database.Migrate();

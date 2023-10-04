@@ -1,6 +1,3 @@
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { CreateUpdateWorkoutplanPageComponent } from './Components/create-update-workoutplan-page/create-update-workoutplan-page.component';
 import { YourWorkoutsPageComponent } from './Components/your-workouts-page/your-workouts-page.component';
 import { MyWorkoutsComponent } from './Components/my-workouts/my-workouts.component';
@@ -11,6 +8,11 @@ import { DeleteWorkoutPlanConfirmationPopupComponent } from './Components/my-wor
 import { TrainingCardComponent } from './Components/your-workouts-page/Components/training-card/training-card.component';
 import { ExerciseRowComponent } from './Components/create-update-workoutplan-page/Components/daily-workout/Components/exercise-row/exercise-row.component';
 import { DailyWorkoutComponent } from './Components/create-update-workoutplan-page/Components/daily-workout/daily-workout.component';
+import { WorkoutPlansRoutingModule } from './workout-plans-routing.module';
+
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -20,7 +22,6 @@ import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { WorkoutPlansRoutingModule } from './workout-plans-routing.module';
 
 @NgModule({
   imports: [

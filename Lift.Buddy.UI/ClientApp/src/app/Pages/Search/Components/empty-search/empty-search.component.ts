@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, TemplateRef } from '@angular/core';
-import { UserData } from 'src/app/Model/UserData';
+import { User } from 'src/app/Model/User';
 
 @Component({
   selector: 'app-empty-search',
@@ -8,8 +8,8 @@ import { UserData } from 'src/app/Model/UserData';
 })
 export class EmptySearchComponent implements OnInit {
 
-  public originalSuggested: UserData[] = [];
-  public suggested: UserData[] = [];
+  public originalSuggested: User[] = [];
+  public suggested: User[] = [];
   public searchValue: any = "";
 
   @ViewChild('input') input: ElementRef<HTMLInputElement> | undefined
@@ -21,7 +21,7 @@ export class EmptySearchComponent implements OnInit {
   }
 
   private initSuggestedData() {
-    let a = new UserData()
+    let a = new User()
     a.username = 'mario';
     this.originalSuggested.push(a)
     this.suggested = this.originalSuggested.slice(10);

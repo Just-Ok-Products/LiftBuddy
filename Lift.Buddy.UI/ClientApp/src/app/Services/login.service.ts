@@ -15,6 +15,7 @@ export class LoginService {
     private defaultUrl: string = "api/Auth";
     public currentUsername: string = "";
     public user: User | undefined;
+    public isTrainer: boolean = false // TODO: assign a value from data
     // usare subject per condividere il valore, non tenerlo nel login service e passarlo in giro
     public userId: string = "";
 

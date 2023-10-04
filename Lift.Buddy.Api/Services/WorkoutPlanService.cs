@@ -105,6 +105,7 @@ namespace Lift.Buddy.API.Services
             {
                 var workoutPlans = await _context.WorkoutPlans
                     .Where(x => x.Creator.UserId == userId)
+                    .Include(x => x.WorkoutDays)
                     .ToArrayAsync();
 
                 response.Body = workoutPlans.Select(p => _mapper.Map(p));
