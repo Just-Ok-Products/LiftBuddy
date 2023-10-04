@@ -7,6 +7,7 @@ export const generalNavigationMenu: NavigationMenu[] = [
   { name: 'Records', icon: 'dumbbell', path: 'pr'},
   {name: 'workouts', icon: 'calendar', path: 'workout/training'},
   {name: 'settings', icon: 'gear', path: 'settings'},
+  {name: 'my athletes', icon: 'people-group', path: 'my-athletes'},
 ]
 
 export const workoutNavigationMenu: NavigationMenu[] = [

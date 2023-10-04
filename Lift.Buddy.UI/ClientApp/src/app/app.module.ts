@@ -48,6 +48,8 @@ import { LoginModule } from './Pages/login/login.module';
 import { PageNotFoundModule } from './Pages/PageNotFound/page-not-found.module';
 import { NavigationPageCardComponent } from './Pages/Home/Components/navigation-page-card/navigation-page-card.component';
 import { LoadingVisualizationService } from './Services/loading-visualization.service';
+import { SearchModule } from './Pages/Search/search.module';
+import { MyAthletesModule } from './Pages/My-athletes/my-athletes.module';
 //#endregion
 
 @NgModule({
@@ -88,7 +90,9 @@ import { LoadingVisualizationService } from './Services/loading-visualization.se
     UIElementsModule,
     LoginModule,
     PageNotFoundModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    SearchModule,
+    MyAthletesModule
   ],
   providers: [LoginService, ApiCallsService, PrService, DialogService, LoadingVisualizationService],
   bootstrap: [AppComponent]

@@ -1,6 +1,5 @@
 import { MatCardModule } from '@angular/material/card';
 import { NgModule } from "@angular/core";
-import { LoginPageComponent } from "./Components/login-page/login-page.component";
 import { LoginContainerComponent } from "./login.component";
 import { RegisterPageComponent } from "./Components/register-page/register-page.component";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -16,6 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { UIElementsModule } from '../Components/UI.Elements.module';
+import { LoginPageComponent } from './Components/login-page/login-page.component';
 
 @NgModule({
   imports: [

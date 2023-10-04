@@ -14,6 +14,10 @@ import { SettingsRoutingModule } from './Pages/Settings/setings-routing.module';
 import { WorkoutPlansRoutingModule } from './Pages/WorkoutPlans/workout-plans-routing.module';
 import { LoginRoutingModule } from './Pages/login/login-routing.module';
 import { PageNotFoundComponent } from './Pages/PageNotFound/page-not-found.component';
+import { SearchRoutingModule } from './Pages/Search/search-routing.module';
+import { SearchComponent } from './Pages/Search/search.component';
+import { MyAthletesComponent } from './Pages/My-athletes/my-athletes.component';
+import { MyAthletesRoutingModule } from './Pages/My-athletes/my-athletes-routing.module';
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -23,6 +27,8 @@ const routes: Routes = [
   {path: 'login', component: LoginContainerComponent, loadChildren: () => LoginRoutingModule},
   {path: 'workout', component: WorkoutPlansComponent, loadChildren: () => WorkoutPlansRoutingModule, canActivate: [AuthGuard]},
   {path: 'settings', component: SettingsComponent, loadChildren: () => SettingsRoutingModule},
+  {path: 'search', component: SearchComponent, loadChildren: () => SearchRoutingModule},
+  {path: 'my-athletes', component: MyAthletesComponent, loadChildren: () => MyAthletesRoutingModule},
   {path: '**', component: PageNotFoundComponent}
 ];
 

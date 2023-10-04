@@ -85,11 +85,6 @@ builder.Services.AddControllers().AddJsonOptions(
 
 var app = builder.Build();
 
-//var context = app.Services.GetRequiredService<DbContext>();
-
-//context.Database.EnsureCreated();
-//context.Database.Migrate();
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

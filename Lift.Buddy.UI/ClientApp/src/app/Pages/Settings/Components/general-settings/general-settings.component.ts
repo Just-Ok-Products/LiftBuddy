@@ -58,4 +58,11 @@ export class GeneralSettingsComponent implements OnInit {
     return this.generalSettingsForm.get(controlName) as FormControl;
   }
 
+  public reset() {
+
+  }
+
+  public save() {
+
+  }
 }
