@@ -57,7 +57,6 @@ export class WorkoutplanService {
             }
 
             workout.createdBy = this.loginService.userId;
-            console.log(workout)
             let response = await this.apiService.apiPost(this.defaultUrl, workout);
 
             if (!response.result) {
@@ -89,7 +88,6 @@ export class WorkoutplanService {
     }
 
     public async deleteWorkoutPlan(workoutId: string) {
-        console.log(workoutId)
         const response = await this.apiService.apiDelete(this.defaultUrl, { workoutId });
         return response;
     }

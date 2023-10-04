@@ -32,15 +32,16 @@ export class YourWorkoutsPageComponent implements OnInit {
         }
 
         this.workouts = response.body;
-        const dayNumber = new Date().getDay();
+        const today = new Date().getDay();
 
         response.body.forEach(workout => {
-            const workoutDay = workout.workoutDays.find(x => x.day == dayNumber);
+            const workoutDay = workout.workoutDays.find(x => x.day == today);
             if (workoutDay != undefined) {
                 this.dailyWorkouts.push({ workout: workoutDay, name: workout.name });
             }
         });
 
+        console.log(this.dailyWorkouts)
     }
 
 }

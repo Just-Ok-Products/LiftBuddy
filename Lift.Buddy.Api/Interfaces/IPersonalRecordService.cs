@@ -6,6 +6,6 @@ namespace Lift.Buddy.API.Interfaces
     {
         Task<Response<PersonalRecordDTO>> GetByUserId(Guid userId);
         Task<Response<PersonalRecordDTO>> AddPersonalRecord(Guid userId, IEnumerable<PersonalRecordDTO> personalRecords);
-        Task<Response<PersonalRecordDTO>> UpdatePersonalRecord(Guid userId, IEnumerable<PersonalRecordDTO> personalRecords);
+        Task<Response<PersonalRecordDTO>> UpdatePersonalRecord(Guid userId, PersonalRecords personalRecords);
     }
 }

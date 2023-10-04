@@ -63,7 +63,6 @@ export class CreateUpdateWorkoutplanPageComponent implements OnInit {
                 newWorkoutDay.day = day;
 
                 this.workoutPlan.workoutDays.push(newWorkoutDay)
-                console.log(this.workoutPlan)
                 exercises = newWorkoutDay.exercises;
             } else {
                 exercises = workoutDay.exercises;
@@ -114,7 +113,12 @@ export class CreateUpdateWorkoutplanPageComponent implements OnInit {
 
     public async save() {
         this.deleteEmptyDays();
-        this.workoutPlanSerivice.addWorkoutPlan(this.workoutPlan);
+
+        const update = true;
+        if (update)
+            this.workoutPlanSerivice.addWorkoutPlan(this.workoutPlan);
+        else
+            this.workoutPlanSerivice.updateWorkoutPlan(this.workoutPlan);
     }
 
     /** Deletes empty days from object to save space on DB */

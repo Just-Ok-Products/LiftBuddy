@@ -81,7 +81,6 @@ namespace Lift.Buddy.API.Controllers
                 .WriteToken(jwtDefinition);
 
             // TODO: ritornare oggetto
-            System.Console.WriteLine(id.ToString());
             var res = new Response<string>
             {
                 Result = true,

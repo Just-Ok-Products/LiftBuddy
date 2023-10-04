@@ -40,7 +40,6 @@ export class SecurityQuestionsComponent implements OnInit {
         let userWithoutSecQuestions = this.loginService.user!;
         let securityQuestions: SecurityQuestion[] = [];
 
-        console.log('question' + 1)
         if (this.form.valid) {
             securityQuestions = this.items
                 .map(n => new SecurityQuestion(this.form.controls['question' + n].value, this.form.controls['response' + n].value));

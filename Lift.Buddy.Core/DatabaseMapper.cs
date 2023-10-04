@@ -60,7 +60,10 @@ public class DatabaseMapper : IDatabaseMapper
             ExerciseName = personalRecord.ExerciseName,
             Series = personalRecord.Series,
             Reps = personalRecord.Repetitions,
-            ExerciseType = personalRecord.ExerciseType
+            ExerciseType = personalRecord.ExerciseType,
+            UserId = personalRecord.UserId,
+            UnitOfMeasure = (UnitOfMeasure)personalRecord.UOM,
+            Weight = personalRecord.Weight
         };
 
         // if (personalRecord.Weight.HasValue && personalRecord.UOM.HasValue)
@@ -83,7 +86,8 @@ public class DatabaseMapper : IDatabaseMapper
             Repetitions = personalRecord.Reps,
             Weight = personalRecord.Weight,
             UOM = (int?)personalRecord.UnitOfMeasure,
-            ExerciseType = personalRecord.ExerciseType
+            ExerciseType = personalRecord.ExerciseType,
+            UserId = personalRecord.UserId
         };
     }
 

@@ -11,6 +11,7 @@ public class PersonalRecordDTO
     public int Series { get; set; }
     public int Reps { get; set; }
     public double? Weight { get; set; }
+    public Guid UserId { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public UnitOfMeasure UnitOfMeasure { get; set; }
@@ -22,6 +23,12 @@ public enum UnitOfMeasure
     Undefined,
     KG,
     LB
+}
+
+public class PersonalRecords
+{
+    public IEnumerable<PersonalRecordDTO> ToUpdate { get; set; }
+    public IEnumerable<PersonalRecordDTO> ToAdd { get; set; }
 }
 
 //public record Weight(double Amount, UnitOfMeasure UnitOfMeasure);

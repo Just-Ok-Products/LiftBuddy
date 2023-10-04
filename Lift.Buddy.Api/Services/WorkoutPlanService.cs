@@ -74,11 +74,16 @@ namespace Lift.Buddy.API.Services
 
             try
             {
-                var user = await _context.Users.SingleOrDefaultAsync(x => x.UserId == userId);
+                // TODO dovrà diventare u.AssignedPlans
+                // TODO querare direttamente i workout
+                var user = await _context.Users
+                    .Include(u => u.CreatedPlans)
+                        .ThenInclude(p => p.WorkoutDays)
+                    .SingleOrDefaultAsync(x => x.UserId == userId);
 
                 if (user == null) throw new Exception($"User with user ID '{userId} doesn't exists.");
 
-                var workoutPlans = user?.AssignedPlans;
+                var workoutPlans = user?.CreatedPlans;
 
                 response.Result = true;
                 response.Body = workoutPlans?.Select(p => _mapper.Map(p));
@@ -101,6 +106,7 @@ namespace Lift.Buddy.API.Services
                 var workoutPlans = await _context.WorkoutPlans
                     .Where(x => x.Creator.UserId == userId)
                     .ToArrayAsync();
+
                 response.Body = workoutPlans.Select(p => _mapper.Map(p));
                 response.Result = true;
             }

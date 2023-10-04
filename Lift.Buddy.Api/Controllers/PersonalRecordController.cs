@@ -30,21 +30,21 @@ namespace Lift.Buddy.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Add([FromBody] IEnumerable<PersonalRecordDTO> userRecord)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        // [HttpPost]
+        // public async Task<IActionResult> Add([FromBody] IEnumerable<PersonalRecordDTO> userRecord)
+        // {
+        //     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (userId is null)
-                return NotFound();
+        //     if (userId is null)
+        //         return NotFound();
 
-            var response = await _recordService.AddPersonalRecord(Guid.Parse(userId), userRecord);
+        //     var response = await _recordService.AddPersonalRecord(Guid.Parse(userId), userRecord);
 
-            return Ok(response);
-        }
+        //     return Ok(response);
+        // }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] IEnumerable<PersonalRecordDTO> userRecords)
+        public async Task<IActionResult> Update([FromBody] PersonalRecords userRecords)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 

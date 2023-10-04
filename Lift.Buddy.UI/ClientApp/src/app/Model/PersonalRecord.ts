@@ -8,4 +8,6 @@ export class PersonalRecord {
     public weight: number = 0;
     public unitOfMeasure: string = UnitOfMeasure.KG;
     public exerciseType: ExerciseType = ExerciseType.Weight;
+    public id: string | null = null;
+    public userId: string | null = null;
 }
