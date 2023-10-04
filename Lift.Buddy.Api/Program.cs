@@ -81,11 +81,6 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 
 var app = builder.Build();
 
-//var context = app.Services.GetRequiredService<DbContext>();
-
-//context.Database.EnsureCreated();
-//context.Database.Migrate();
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

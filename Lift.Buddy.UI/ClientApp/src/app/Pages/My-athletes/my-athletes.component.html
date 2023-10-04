@@ -1,0 +1,18 @@
+<app-page-structure
+  [left-menu]="leftMenu"
+  [main]="main"
+  [right-menu]="rightMenu"
+>
+</app-page-structure>
+
+<ng-template #leftMenu>
+  <app-left-menu/>
+</ng-template>
+
+<ng-template #main>
+  <router-outlet></router-outlet>
+</ng-template>
+
+<ng-template #rightMenu>
+  <app-my-athletes-right-menu></app-my-athletes-right-menu>
+</ng-template>

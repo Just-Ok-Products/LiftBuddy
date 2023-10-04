@@ -14,5 +14,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - User data section
 - Workout plan section
 - PR section
+- Settings section
 ### Fixed
 ### Changed

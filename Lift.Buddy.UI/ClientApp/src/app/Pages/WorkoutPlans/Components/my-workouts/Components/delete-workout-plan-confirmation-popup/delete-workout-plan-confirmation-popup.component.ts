@@ -1,4 +1,5 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { ConfirmationDialogComponent } from './../../../../../Components/confirmation-dialog/confirmation-dialog.component';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { concatWith } from 'rxjs';
 import { WorkoutPlan } from 'src/app/Model/WorkoutPlan';
@@ -34,8 +35,8 @@ export class DeleteWorkoutPlanConfirmationPopupComponent implements OnInit {
         this.dialogRef.close(true);
     }
 
-    public cancel() {
-        this.dialogRef.close(false);
-    }
+  public cancel() {
+    ConfirmationDialogComponent.cancelAction(this.dialogRef);
+  }
 
 }

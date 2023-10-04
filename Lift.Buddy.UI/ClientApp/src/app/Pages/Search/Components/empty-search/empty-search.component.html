@@ -1,0 +1,16 @@
+<mat-toolbar class="mt-3">
+  <i class="fa fa-magnifying-glass"></i>
+  <input #input class="search-input" type="search" (input)="updateSuggested()" (search)="search()" [value]="searchValue" [matAutocomplete]="auto"/>
+  <mat-autocomplete #auto="matAutocomplete">
+      <mat-option *ngFor="let userSuggestion of suggested" [value]="userSuggestion.username">
+          {{userSuggestion.username}}
+      </mat-option>
+  </mat-autocomplete>
+</mat-toolbar>
+<mat-card class="mt-3">
+  <mat-card-content>
+    <app-search-result
+      *ngFor="let item of [1,2,3]"
+    ></app-search-result>
+  </mat-card-content>
+</mat-card>

@@ -11,6 +11,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatButtonModule } from '@angular/material/button';
+import { SwapRoleConfirmationDialogComponent } from './Components/general-settings/Components/swap-role-confirmation-dialog/swap-role-confirmation-dialog.component';
+import { MatSelectModule } from '@angular/material/select';
+import { SettingRowComponent } from './Components/general-settings/Components/setting-row/setting-row.component';
 
 @NgModule({
   imports: [
@@ -25,11 +29,16 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatButtonModule,
+    MatSelectModule
   ],
   declarations: [
     SettingsComponent,
-    GeneralSettingsComponent
+    GeneralSettingsComponent,
+    SwapRoleConfirmationDialogComponent,
+    SwapRoleConfirmationDialogComponent,
+    SettingRowComponent
   ],
   bootstrap: [SettingsComponent]
 })

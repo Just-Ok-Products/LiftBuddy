@@ -1,0 +1,10 @@
+<div class="text-center">
+  <button disabled="true" mat-button class="col-5">
+    {{label}}
+  </button>
+  <mat-form-field class="col-2">
+    <mat-select ngDefaultControl (valueChange)="updateForm($event)" [(ngModel)]="default" placeholder="">
+      <mat-option [value]="option.value" *ngFor="let option of options">{{option.label}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
