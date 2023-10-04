@@ -242,7 +242,15 @@ namespace Lift.Buddy.API.Services
 
             try
             {
-                _context.WorkoutPlans.Update(_mapper.Map(workoutPlan));
+                var plan = _mapper.Map(workoutPlan);
+
+                var oldPlan = await _context.WorkoutPlans
+                    .SingleAsync(p => p.WorkoutPlanId == plan.WorkoutPlanId);
+
+                _context.WorkoutPlans.Remove(oldPlan);
+                await _context.SaveChangesAsync();
+
+                await _context.WorkoutPlans.AddAsync(plan);
 
                 if ((await _context.SaveChangesAsync()) < 1)
                 {

@@ -27,7 +27,6 @@ export class DeleteWorkoutPlanConfirmationPopupComponent implements OnInit {
     }
 
     public async delete() {
-        console.log(this.workout.id)
         const response = await this.workoutplanService.deleteWorkoutPlan(this.workout.id);
         if (!response.result) {
             this.snackbarService.operErrorSnackbar(`Failed to delete workoutplan ${this.workout.name}`);
