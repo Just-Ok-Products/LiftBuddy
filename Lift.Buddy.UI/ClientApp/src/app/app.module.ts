@@ -44,12 +44,12 @@ import { DialogService } from './Services/Utils/dialog.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SettingsModule } from './Pages/Settings/settings.module';
 import { UIElementsModule } from './Pages/Components/UI.Elements.module';
-import { LoginModule } from './Pages/Login/login.module';
 import { PageNotFoundModule } from './Pages/PageNotFound/page-not-found.module';
 import { NavigationPageCardComponent } from './Pages/Home/Components/navigation-page-card/navigation-page-card.component';
 import { LoadingVisualizationService } from './Services/loading-visualization.service';
 import { SearchModule } from './Pages/Search/search.module';
 import { MyAthletesModule } from './Pages/My-athletes/my-athletes.module';
+import { LoginModule } from './Pages/login/login.module';
 //#endregion
 
 @NgModule({
