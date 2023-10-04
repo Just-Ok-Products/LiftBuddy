@@ -3,6 +3,7 @@ using System;
 using Lift.Buddy.Core.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Lift.Buddy.Core.Migrations
 {
     [DbContext(typeof(LiftBuddyContext))]
-    partial class LiftBuddyContextModelSnapshot : ModelSnapshot
+    [Migration("20231004144406_on-delete-cascade-workout")]
+    partial class ondeletecascadeworkout
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.9");

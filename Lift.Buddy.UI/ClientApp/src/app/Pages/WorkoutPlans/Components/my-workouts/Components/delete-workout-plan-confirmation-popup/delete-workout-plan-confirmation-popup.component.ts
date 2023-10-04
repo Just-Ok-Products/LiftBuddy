@@ -1,5 +1,6 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { concatWith } from 'rxjs';
 import { WorkoutPlan } from 'src/app/Model/WorkoutPlan';
 import { SnackBarService } from 'src/app/Services/Utils/snack-bar.service';
 import { WorkoutplanService } from 'src/app/Services/workoutplan.service';
@@ -26,6 +27,7 @@ export class DeleteWorkoutPlanConfirmationPopupComponent implements OnInit {
     }
 
     public async delete() {
+        console.log(this.workout.id)
         const response = await this.workoutplanService.deleteWorkoutPlan(this.workout.id);
         if (!response.result) {
             this.snackbarService.operErrorSnackbar(`Failed to delete workoutplan ${this.workout.name}`);

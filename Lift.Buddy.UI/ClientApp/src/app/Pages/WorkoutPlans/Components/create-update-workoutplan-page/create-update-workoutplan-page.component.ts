@@ -114,8 +114,7 @@ export class CreateUpdateWorkoutplanPageComponent implements OnInit {
     public async save() {
         this.deleteEmptyDays();
 
-        const update = true;
-        if (update)
+        if (this.workoutPlan.id == "")
             this.workoutPlanSerivice.addWorkoutPlan(this.workoutPlan);
         else
             this.workoutPlanSerivice.updateWorkoutPlan(this.workoutPlan);

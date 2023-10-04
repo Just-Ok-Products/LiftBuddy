@@ -28,10 +28,12 @@ public class LiftBuddyContext : DbContext
             entity.Property(u => u.IsAdmin).IsRequired().HasDefaultValue(false);
 
             entity.HasMany(u => u.SecurityQuestions)
-                .WithOne(s => s.User);
+                .WithOne(s => s.User)
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasMany(u => u.PersonalRecords)
-                .WithOne(pr => pr.User);
+                .WithOne(pr => pr.User)
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasMany(u => u.AssignedPlans)
                 .WithMany(p => p.Users);
@@ -47,7 +49,8 @@ public class LiftBuddyContext : DbContext
                 .HasForeignKey(p => p.CreatorId);
 
             entity.HasMany(p => p.WorkoutDays)
-                .WithOne(p => p.WorkoutPlan);
+                .WithOne(p => p.WorkoutPlan)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<WorkoutDay>(entity =>
@@ -55,7 +58,8 @@ public class LiftBuddyContext : DbContext
             entity.HasKey(d => d.Id);
 
             entity.HasMany(d => d.Exercises)
-                .WithOne(e => e.WorkoutDay);
+                .WithOne(e => e.WorkoutDay)
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(d => d.WorkoutPlan)
                 .WithMany(p => p.WorkoutDays);
@@ -64,6 +68,7 @@ public class LiftBuddyContext : DbContext
         modelBuilder.Entity<Exercise>(entity =>
         {
             entity.HasKey(e => e.ExerciseId);
+
         });
 
         modelBuilder.Entity<PersonalRecord>(entity =>

@@ -40,41 +40,6 @@ namespace Lift.Buddy.API.Services
             return response;
         }
 
-        public async Task<Response<PersonalRecordDTO>> AddPersonalRecord(
-            Guid userId,
-            IEnumerable<PersonalRecordDTO> records)
-        {
-            var response = new Response<PersonalRecordDTO>();
-
-            try
-            {
-                if (!records.Any()) throw new Exception("No data received");
-
-                var personalRecords = records.Select(r =>
-                {
-                    var record = _mapper.Map(r);
-                    record.UserId = userId;
-                    return record;
-                });
-
-                await _context.PersonalRecords.AddRangeAsync(personalRecords);
-
-                if ((await _context.SaveChangesAsync()) < 1)
-                {
-                    throw new Exception("No changes to the database done");
-                }
-
-                response.Result = true;
-            }
-            catch (Exception ex)
-            {
-                response.Notes = Utils.ErrorMessage(nameof(AddPersonalRecord), ex);
-                response.Result = false;
-            }
-
-            return response;
-        }
-
         public async Task<Response<PersonalRecordDTO>> UpdatePersonalRecord(
             Guid userId,
             PersonalRecords records)

@@ -40,8 +40,6 @@ export class YourWorkoutsPageComponent implements OnInit {
                 this.dailyWorkouts.push({ workout: workoutDay, name: workout.name });
             }
         });
-
-        console.log(this.dailyWorkouts)
     }
 
 }

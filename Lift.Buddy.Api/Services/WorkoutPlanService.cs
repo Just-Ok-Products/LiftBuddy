@@ -209,7 +209,6 @@ namespace Lift.Buddy.API.Services
         public async Task<Response<WorkoutPlanDTO>> DeleteWorkoutPlan(Guid workoutPlanId)
         {
             var response = new Response<WorkoutPlanDTO>();
-
             try
             {
                 var workoutPlan = await _context.WorkoutPlans
@@ -218,7 +217,6 @@ namespace Lift.Buddy.API.Services
                 if (workoutPlan == null) throw new Exception("The workplan does not exist in the database.");
 
                 _context.WorkoutPlans.Remove(workoutPlan);
-
                 if ((await _context.SaveChangesAsync()) < 1)
                 {
                     throw new Exception("Failed to save changes in database");

@@ -88,7 +88,6 @@ export class WorkoutplanService {
     }
 
     public async deleteWorkoutPlan(workoutId: string) {
-        const response = await this.apiService.apiDelete(this.defaultUrl, { workoutId });
-        return response;
+        return this.apiService.apiDelete(this.defaultUrl, { workoutId });
     }
 }

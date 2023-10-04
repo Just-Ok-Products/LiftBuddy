@@ -1,6 +1,7 @@
 ﻿using Lift.Buddy.API.Interfaces;
 using Lift.Buddy.Core.Models;
 using Microsoft.AspNetCore.Mvc;
+using PdfSharp.Pdf.Content.Objects;
 using System.Security.Claims;
 
 namespace Lift.Buddy.API.Controllers
@@ -103,7 +104,7 @@ namespace Lift.Buddy.API.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete([FromBody] WorkoutIdModel workoutId)
         {
-            var response = await _workoutScheduleService.DeleteWorkoutPlan(workoutId.Value);
+            var response = await _workoutScheduleService.DeleteWorkoutPlan(workoutId.WorkoutId);
             if (!response.Result)
             {
                 return Ok(response);
@@ -114,7 +115,7 @@ namespace Lift.Buddy.API.Controllers
 
         public class WorkoutIdModel
         {
-            public Guid Value { get; set; }
+            public Guid WorkoutId { get; set; }
         };
     }
 }
